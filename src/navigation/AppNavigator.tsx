@@ -114,10 +114,10 @@ function HomeTabs() {
   );
 }
 
-export default function AppNavigator() {
+export default function AppNavigator({ initialRouteName = 'Carousel' }) {
   return (
     <Stack.Navigator
-      initialRouteName="Carousel"
+      initialRouteName={initialRouteName}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Carousel" component={CarouselScreen} />

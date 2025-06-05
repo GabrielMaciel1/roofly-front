@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightColors, darkColors } from '../../theme/colors';
+import { lightColors, darkColors } from '../theme/colors';
 
 export const createLoginStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
@@ -7,7 +7,7 @@ export const createLoginStyles = (colors: typeof lightColors | typeof darkColors
       flex: 1,
       justifyContent: 'center',
       padding: 20,
-      backgroundColor: colors.card
+      backgroundColor: colors.background
     },
     logoContainer: {
       alignItems: 'center',
@@ -17,7 +17,7 @@ export const createLoginStyles = (colors: typeof lightColors | typeof darkColors
       width: 350,
       height: 100,
       marginLeft: 20,
-      backgroundColor: colors.card,
+      backgroundColor: colors.background,
       alignItems: 'center',
       justifyContent: 'center',
      

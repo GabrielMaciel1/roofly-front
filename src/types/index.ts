@@ -39,7 +39,10 @@ export type MainTabParamList = {
 };
 
 export type TabParamList = {
-  HomeTab: undefined;
+  Home: undefined;
+  Search: undefined;
+  Saved: undefined;
+  Messages: undefined;
   Profile: undefined;
 };
 

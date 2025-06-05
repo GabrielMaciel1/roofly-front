@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { useTheme } from '../theme/ThemeContext';
-import { createCarouselStyles } from './styles/CarouselScreen.styles';
+import { createCarouselStyles } from '../styles/CarouselScreen.styles';
 
 // Slides para o carousel explicativo do marketplace de imóveis, comerciais e terrenos
 const slides = [

@@ -1,7 +1,11 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Alert } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import AppNavigator from './src/navigation/AppNavigator';
 import { initDatabase } from './src/database/database';
 import { ThemeProvider } from './src/theme/ThemeContext';
@@ -9,27 +13,33 @@ import { ThemeProvider } from './src/theme/ThemeContext';
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = React.useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [initialRoute, setInitialRoute] = useState<'Home' | 'Carousel'>('Carousel');
 
   useEffect(() => {
     async function prepare() {
       try {
         await initDatabase();
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const user = await AsyncStorage.getItem('user');
+        setInitialRoute(user ? 'Home' : 'Carousel');
       } catch (error) {
-        console.error(error);
+        console.error('Erro durante a preparação do app:', error);
+        Alert.alert('Erro de inicialização', 'Ocorreu um erro ao carregar o aplicativo.');
+        setInitialRoute('Carousel');
       } finally {
         setAppIsReady(true);
       }
     }
-
     prepare();
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      try {
+        await SplashScreen.hideAsync();
+      } catch (e) {
+        console.error('Erro ao esconder splash screen:', e);
+      }
     }
   }, [appIsReady]);
 
@@ -38,12 +48,14 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider onLayout={onLayoutRootView}>
-      <ThemeProvider>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <AppNavigator initialRouteName={initialRoute} />
+          </NavigationContainer>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
