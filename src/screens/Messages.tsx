@@ -1,7 +1,8 @@
 import MessageList from '../components/MessageList';
 import React from 'react';
-import { View } from 'react-native';
-
+import { View, Text } from 'react-native';
+import useTheme from '../theme/ThemeContext';
+import { createMessagesScreenStyles } from '../styles/MessagesScreen.styles';
 
 const messages = [
   {
@@ -52,8 +53,14 @@ const messages = [
 ];
 
 export default function Messages() {
+  const colors = useTheme();
+  const styles = createMessagesScreenStyles(colors);
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Mensagens</Text>
+      </View>
       <MessageList messages={messages} />
     </View>
   );

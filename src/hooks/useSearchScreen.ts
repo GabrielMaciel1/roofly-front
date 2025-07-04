@@ -38,6 +38,9 @@ export function useSearchScreen() {
       if (status !== 'granted') return
       const loc = await Location.getCurrentPositionAsync({})
       setLocation(loc)
+      if (!loc || !loc.coords) {
+        return;
+      }
       const initialRegion = {
         latitude: loc.coords.latitude,
         longitude: loc.coords.longitude,

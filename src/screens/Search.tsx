@@ -3,53 +3,16 @@ import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
-import useTheme from '../theme/useTheme'
+import useTheme from '../theme/ThemeContext';
 import { createSearchStyles } from '../styles/SearchScreen.styles'
 import { useSearchScreen } from '../hooks/useSearchScreen'
+import ListingCard from '../components/ListingCard'
+import StyledTextInput from '../components/common/StyledTextInput'
 import { SearchAutocomplete } from '../components/SearchAutocomplete'
-import { ListingCard } from '../components/ListingCard'
-
-const mapDarkStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#1E1E1E' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#FFFFFF' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#000000' }, { weight: 2 }] },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{ color: '#3C3C3C' }, { weight: 1.5 }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#FFFFFF' }],
-  },
-  {
-    featureType: 'road.local',
-    elementType: 'geometry',
-    stylers: [{ color: '#2E2E2E' }],
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry',
-    stylers: [{ color: '#383838' }],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'geometry',
-    stylers: [{ color: '#252525' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{ color: '#151515' }],
-  },
-]
 
 const SearchScreen = () => {
   const colors = useTheme()
   const styles = createSearchStyles(colors)
-  // cardStyles é reutilizado do styles padrão
-  const cardStyles = styles
   const {
     location,
     search,
@@ -66,7 +29,19 @@ const SearchScreen = () => {
   } = useSearchScreen()
 
   const renderListingItem = ({ item }: { item: any }) => (
-    <ListingCard item={item} colors={colors} cardStyles={cardStyles} />
+    <ListingCard
+      listing={{
+        id: item.id,
+        title: item.titulo,
+        location: `${item.endereco.cidade}, ${item.endereco.estado}`,
+        price: `R$${item.preco.toLocaleString('pt-BR')}`,
+        period: item.tipo === 'Aluguel' ? '/mês' : '',
+        rating: 4.5,
+        image: item.fotos[0],
+        type: item.imovelType === 'Casa' ? 'House' : 'Apartment',
+      }}
+      onPress={() => { /* Implementar navegação para detalhes do imóvel */ }}
+    />
   )
 
   return (
@@ -75,7 +50,7 @@ const SearchScreen = () => {
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         region={region}
-        customMapStyle={mapDarkStyle}
+        customMapStyle={styles.mapDarkStyle}
         showsUserLocation
         onRegionChangeComplete={setRegion}
       >
@@ -114,14 +89,14 @@ const SearchScreen = () => {
         </View>
         <View style={styles.searchRow}>
           <MaterialCommunityIcons name="magnify" size={20} color={colors.description} />
-          <TextInput
-            style={[styles.input, { color: colors.text }]}
+          <StyledTextInput
+            label=""
             placeholder="Pesquisar Localização"
-            placeholderTextColor={colors.description}
             value={search}
             onChangeText={setSearch}
             onFocus={() => setShowAutocomplete(true)}
             onBlur={() => setTimeout(() => setShowAutocomplete(false), 100)}
+            style={styles.input}
           />
           <TouchableOpacity style={styles.filterButton}>
             <MaterialCommunityIcons name="tune" size={22} color={colors.buttonText} />

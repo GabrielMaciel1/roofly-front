@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import db from '../database/database';
+import useTheme from '../theme/ThemeContext';
+import { createForgotPasswordStyles } from '../styles/ForgotPasswordScreen.styles';
+import StyledTextInput from '../components/common/StyledTextInput';
 
 type ForgotPasswordScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ForgotPassword'>;
@@ -10,6 +13,8 @@ type ForgotPasswordScreenProps = {
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
+  const colors = useTheme();
+  const styles = createForgotPasswordStyles(colors);
 
   const handleRecoverPassword = async () => {
     if (!email) {
@@ -43,8 +48,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
       <Text style={styles.description}>
         Digite seu email cadastrado para receber instruções de recuperação de senha
       </Text>
-      <TextInput
-        style={styles.input}
+      <StyledTextInput
+        label="Email"
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
@@ -61,50 +66,4 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  description: {
-    textAlign: 'center',
-    marginBottom: 30,
-    color: '#666',
-  },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  link: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-});
-
-export default ForgotPasswordScreen; 
+export default ForgotPasswordScreen;

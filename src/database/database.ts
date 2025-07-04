@@ -46,12 +46,9 @@ const createAdminUser = async () => {
         'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
         ['Admin User', 'admin', 'admin']
       );
-      console.log('Usuário administrador criado com sucesso.');
     } else {
-      console.log('Usuário administrador já existe.');
     }
   } catch (error) {
-    console.error('Erro ao criar usuário administrador:', error);
   }
 };
 

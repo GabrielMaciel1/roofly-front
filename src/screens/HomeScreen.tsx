@@ -5,7 +5,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Image,
   StatusBar,
   SafeAreaView,
 } from 'react-native';
@@ -13,8 +12,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { api } from '../utils/api';
-import useTheme from '../theme/useTheme';
+import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
+import ListingCard, { Listing } from '../components/ListingCard';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -24,7 +24,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createHomeStyles(colors);
 
-  const transformListingData = (data: any[]) => {
+  const transformListingData = (data: any[]): Listing[] => {
     return data.map(item => ({
       id: item.id,
       title: item.titulo,
@@ -53,74 +53,45 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const renderCategoryItem = (category: typeof categories[0]) => (
     <TouchableOpacity key={category.name} style={styles.categoryButton}>
       <View style={styles.categoryIconContainer}>
-        <MaterialCommunityIcons name={category.icon} size={24} color={colors.title} />
+        <MaterialCommunityIcons name={category.icon} size={24} color={colors.button} />
       </View>
       <Text style={styles.categoryText}>{category.name}</Text>
     </TouchableOpacity>
   );
 
-  const renderListingCard = (listing: typeof popularListings[0]) => (
-    <TouchableOpacity key={listing.id} style={styles.listingCard}>
-      <Image source={listing.image} style={styles.listingImage} />
-      <View style={styles.listingInfo}>
-        <View style={styles.listingRatingContainer}>
-          <Text style={styles.listingRatingText}>{listing.rating}</Text>
-        </View>
-        <Text style={styles.listingType}>{listing.type}</Text>
-        <View style={styles.listingPriceContainer}>
-          <Text style={styles.listingPrice}>{listing.price}</Text>
-          <Text style={styles.listingPeriod}>{listing.period}</Text>
-        </View>
-        <Text style={styles.listingTitle}>{listing.title}</Text>
-        <View style={styles.listingLocationContainer}>
-          <MaterialCommunityIcons name="map-marker" size={14} color={colors.description} />
-          <Text style={styles.listingLocationText}>{listing.location}</Text>
-        </View>
-        <TouchableOpacity style={styles.heartIconContainer}>
-          <MaterialCommunityIcons name="heart-outline" size={20} color={colors.description} />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={colors.text === '#fff' ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
+      <StatusBar barStyle={colors.text === '#FFFFFF' ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.locationContainer}>
-            <MaterialCommunityIcons name="map-marker" size={20} color={colors.text} />
-            <View>
-              <Text style={styles.locationLabel}>Localização</Text>
-              <Text style={styles.locationText}>Fortaleza, CE</Text>
+            <Text style={styles.locationLabel}>Location</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="map-marker" size={20} color={colors.button} style={{ marginRight: 4 }} />
+              <Text style={styles.locationText}>Surabaya, Indonesia</Text>
+              <MaterialCommunityIcons name="chevron-down" size={20} color={colors.text} style={{ marginLeft: 4 }} />
             </View>
           </View>
           <TouchableOpacity style={styles.notificationButton}>
-            <MaterialCommunityIcons name="bell-outline" size={24} color={colors.text} />
+            <MaterialCommunityIcons name="bell-outline" size={24} color={colors.button} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
-            <MaterialCommunityIcons name="magnify" size={20} color={colors.description} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Pesquisar"
+              placeholder="Search"
               placeholderTextColor={colors.description}
             />
+            <MaterialCommunityIcons name="magnify" size={20} color={colors.description} />
           </View>
           <TouchableOpacity style={styles.filterButton}>
-            <MaterialCommunityIcons name="tune" size={24} color={colors.buttonText} />
+            <MaterialCommunityIcons name="filter-variant" size={24} color={colors.button} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Categorias</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>Ver todos</Text>
-            </TouchableOpacity>
-          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesList}>
             {categories.map(renderCategoryItem)}
           </ScrollView>
@@ -129,24 +100,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Populares</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {popularListings.map(renderListingCard)}
+            {popularListings.map(listing => (
+              <ListingCard
+                key={listing.id}
+                listing={listing}
+                onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+              />
+            ))}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Próximos de você</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {nearbyListings.map(renderListingCard)}
+            {nearbyListings.map(listing => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
           </ScrollView>
         </View>
 

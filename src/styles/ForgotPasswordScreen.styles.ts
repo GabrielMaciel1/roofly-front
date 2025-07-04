@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightColors, darkColors } from '../theme/colors';
+import { lightColors, darkColors } from '../../theme/colors';
 
 export const createForgotPasswordStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
@@ -13,21 +13,16 @@ export const createForgotPasswordStyles = (colors: typeof lightColors | typeof d
       fontSize: 24,
       fontWeight: 'bold',
       textAlign: 'center',
-      marginBottom: 30,
-      color: colors.title,
+      marginBottom: 20,
+      color: colors.text,
     },
-    input: {
-      height: 50,
-      borderWidth: 1,
-      borderColor: colors.dot,
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      marginBottom: 15,
-      backgroundColor: colors.card,
+    description: {
+      textAlign: 'center',
+      marginBottom: 30,
       color: colors.text,
     },
     button: {
-      backgroundColor: colors.button,
+      backgroundColor: colors.secondary,
       height: 50,
       borderRadius: 8,
       justifyContent: 'center',
@@ -35,13 +30,13 @@ export const createForgotPasswordStyles = (colors: typeof lightColors | typeof d
       marginBottom: 15,
     },
     buttonText: {
-      color: colors.buttonText,
+      color: colors.primary,
       fontSize: 16,
       fontWeight: 'bold',
     },
     link: {
-      color: colors.title,
+      color: colors.secondary,
       textAlign: 'center',
       marginTop: 10,
     },
-  }); 
+  });

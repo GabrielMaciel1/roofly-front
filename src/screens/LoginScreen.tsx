@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, Switch } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import db from '../database/database';
-import useTheme from '../theme/useTheme';
+import useTheme from '../theme/ThemeContext';
 import { createLoginStyles } from '../styles/LoginScreen.styles';
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import StyledTextInput from '../components/common/StyledTextInput';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -56,21 +57,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email<Text style={{ color: 'red' }}>*</Text></Text>
-        <TextInput
-          style={styles.input}
+        <StyledTextInput
+          label="Email"
           placeholder="Email"
-          placeholderTextColor={colors.description}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <Text style={styles.label}>Senha<Text style={{ color: 'red' }}>*</Text></Text>
-        <TextInput
-          style={styles.input}
+        <StyledTextInput
+          label="Senha"
           placeholder="Senha"
-          placeholderTextColor={colors.description}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -79,11 +76,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           <Switch
             value={rememberMe}
             onValueChange={setRememberMe}
-            trackColor={{ false: colors.dot, true: colors.button }}
-            thumbColor={rememberMe ? colors.button : colors.dot}
+            trackColor={{ false: colors.primary, true: colors.secondary }}
+            thumbColor={rememberMe ? colors.secondary : colors.primary}
             style={styles.checkbox}
           />
           <Text style={styles.rememberMeText}>Lembrar-me</Text>
+		  <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+			<Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
+		  </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>

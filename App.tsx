@@ -8,7 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AppNavigator from './src/navigation/AppNavigator';
 import { initDatabase } from './src/database/database';
-import { ThemeProvider } from './src/theme/ThemeContext';
+
+import { ThemeProvider } from './src/contexts/ThemeContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -59,3 +60,4 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+

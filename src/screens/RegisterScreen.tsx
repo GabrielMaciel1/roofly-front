@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import db from '../database/database';
-import useTheme from '../theme/useTheme';
+import useTheme from '../theme/ThemeContext';
+import { createRegisterStyles } from '../styles/RegisterScreen.styles';
+import StyledTextInput from '../components/common/StyledTextInput';
 
 type RegisterScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
@@ -16,6 +18,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
   const colors = useTheme();
+  const styles = createRegisterStyles(colors);
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -44,97 +47,51 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }] }>
-      <Text style={[styles.title, { color: colors.title }]}>Cadastro</Text>
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.dot }]}
+    <View style={styles.container}>
+      <Text style={styles.title}>Cadastro</Text>
+      <StyledTextInput
+        label="Nome"
         placeholder="Nome *"
-        placeholderTextColor={colors.description}
         value={name}
         onChangeText={setName}
       />
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.dot }]}
+      <StyledTextInput
+        label="Email"
         placeholder="Email *"
-        placeholderTextColor={colors.description}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.dot }]}
+      <StyledTextInput
+        label="Senha"
         placeholder="Senha *"
-        placeholderTextColor={colors.description}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.dot }]}
+      <StyledTextInput
+        label="Confirmar Senha"
         placeholder="Confirmar Senha *"
-        placeholderTextColor={colors.description}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.dot }]}
+      <StyledTextInput
+        label="Telefone"
         placeholder="Telefone"
-        placeholderTextColor={colors.description}
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-      <TouchableOpacity style={[styles.button, { backgroundColor: colors.button }]} onPress={handleRegister}>
-        <Text style={[styles.buttonText, { color: colors.buttonText }]}>Cadastrar</Text>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={[styles.link, { color: colors.title }]}>Já tem uma conta? Faça login</Text>
+        <Text style={styles.link}>Já tem uma conta? Faça login</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  link: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-});
-
-export default RegisterScreen; 
+export default RegisterScreen;

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightColors, darkColors } from '../../theme/colors';
+import { lightColors, darkColors } from '../theme/colors';
 
 export const createRegisterStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
@@ -14,20 +14,10 @@ export const createRegisterStyles = (colors: typeof lightColors | typeof darkCol
       fontWeight: 'bold',
       textAlign: 'center',
       marginBottom: 30,
-      color: colors.title,
-    },
-    input: {
-      height: 50,
-      borderWidth: 1,
-      borderColor: colors.dot,
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      marginBottom: 15,
-      backgroundColor: colors.card,
       color: colors.text,
     },
     button: {
-      backgroundColor: colors.button,
+      backgroundColor: colors.secondary,
       height: 50,
       borderRadius: 8,
       justifyContent: 'center',
@@ -35,13 +25,13 @@ export const createRegisterStyles = (colors: typeof lightColors | typeof darkCol
       marginBottom: 15,
     },
     buttonText: {
-      color: colors.buttonText,
+      color: colors.primary,
       fontSize: 16,
       fontWeight: 'bold',
     },
     link: {
-      color: colors.title,
+      color: colors.secondary,
       textAlign: 'center',
       marginTop: 10,
     },
-  }); 
+  });

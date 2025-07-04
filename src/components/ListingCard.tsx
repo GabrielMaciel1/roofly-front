@@ -1,47 +1,59 @@
-import React from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
+import { createStyles } from './ListingCard.styles';
 
-interface ListingCardProps {
-  item: any
-  colors: any
-  cardStyles: any
+export interface Listing {
+  id: string;
+  title: string;
+  location: string;
+  price: string;
+  period: string;
+  rating: number;
+  image: any;
+  type: string;
 }
 
-export const ListingCard: React.FC<ListingCardProps> = ({ item, colors, cardStyles }) => {
-  const formatPrice = (price: number) =>
-    price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+interface ListingCardProps {
+  listing: Listing;
+  onPress?: () => void;
+}
+
+const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress }) => {
+  const colors = useTheme();
+  const styles = createStyles(colors);
 
   return (
-    <View style={[cardStyles.listingCard, { backgroundColor: colors.card }]}> 
-      <Image source={item.fotos[0]} style={cardStyles.listingCardImage} />
-      <View style={cardStyles.ratingBadge}>
-        <MaterialCommunityIcons name="star" size={14} color="#FFC107" />
-        <Text style={cardStyles.ratingText}>4.5</Text>
+    <TouchableOpacity onPress={onPress} style={styles.listingCard}>
+      <Image source={listing.image} style={styles.listingImage} />
+      <View style={styles.listingRatingContainer}>
+        <MaterialCommunityIcons name="star" size={14} color={colors.star} />
+        <Text style={styles.listingRatingText}>{listing.rating}</Text>
       </View>
-      <View style={cardStyles.listingCardContent}>
-        <View style={cardStyles.topRow}>
-          <View style={[cardStyles.imovelTypeBadge, { backgroundColor: colors.button }]}> 
-            <Text style={[cardStyles.imovelTypeText, { color: colors.buttonText || '#FFFFFF' }]}>{item.imovelType}</Text>
+      <View style={styles.listingInfo}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+          <View style={styles.listingTypeLabel}>
+            <Text style={styles.listingTypeLabelText}>{listing.type}</Text>
           </View>
-          <Text style={[cardStyles.priceText, { color: colors.button }]}> 
-            {formatPrice(item.preco)}
-            {item.tipo === 'Aluguel' && <Text style={{ fontSize: 12, color: colors.description }}> /mês</Text>}
-          </Text>
+          <View style={styles.listingPriceContainer}>
+            <Text style={styles.listingPrice}>{listing.price}</Text>
+            <Text style={styles.listingPeriod}>{listing.period}</Text>
+          </View>
         </View>
-        <Text style={[cardStyles.titleText, { color: colors.text }]} numberOfLines={1} ellipsizeMode="tail">
-          {item.titulo}
-        </Text>
-        <View style={cardStyles.locationRow}>
-          <MaterialCommunityIcons name="map-marker-outline" size={14} color={colors.description} />
-          <Text style={[cardStyles.locationText, { color: colors.description }]} numberOfLines={1} ellipsizeMode="tail">
-            {`${item.endereco.bairro}, ${item.endereco.cidade}`}
-          </Text>
-          <TouchableOpacity style={cardStyles.favoriteIcon}>
-            <MaterialCommunityIcons name="heart-outline" size={22} color={colors.description} />
+        <Text style={styles.listingTitle}>{listing.title}</Text>
+        <View style={styles.listingLocationAndHeartContainer}>
+          <View style={styles.listingLocationContainer}>
+            <MaterialCommunityIcons name="map-marker" size={14} color={colors.button} />
+            <Text style={styles.listingLocationText}>{listing.location}</Text>
+          </View>
+          <TouchableOpacity style={styles.heartIconContainer}>
+            <MaterialCommunityIcons name="heart-outline" size={20} color={colors.button} />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
-  )
-}
+    </TouchableOpacity>
+  );
+};
+
+export default ListingCard;

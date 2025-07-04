@@ -5,6 +5,41 @@ const { width } = Dimensions.get('window');
 
 export const createSearchStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
+    mapDarkStyle: [
+      { elementType: 'geometry', stylers: [{ color: '#1E1E1E' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#FFFFFF' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#000000' }, { weight: 2 }] },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [{ color: '#3C3C3C' }, { weight: 1.5 }],
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#FFFFFF' }],
+      },
+      {
+        featureType: 'road.local',
+        elementType: 'geometry',
+        stylers: [{ color: '#2E2E2E' }],
+      },
+      {
+        featureType: 'administrative',
+        elementType: 'geometry',
+        stylers: [{ color: '#383838' }],
+      },
+      {
+        featureType: 'poi',
+        elementType: 'geometry',
+        stylers: [{ color: '#252525' }],
+      },
+      {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{ color: '#151515' }],
+      },
+    ],
     searchCardTop: {
       position: 'absolute',
       top: Platform.OS === 'android' ? StatusBar.currentHeight || 10 : 40,
@@ -65,7 +100,7 @@ export const createSearchStyles = (colors: typeof lightColors | typeof darkColor
       overflow: 'hidden',
     },
     listingCard: {
-      width: 150, // Ajustar largura conforme necessário
+      width: 150,
       borderRadius: 16,
       padding: 10,
       marginRight: 10,
