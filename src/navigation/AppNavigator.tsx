@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import Search from '../screens/Search';
 import Saved from '../screens/Saved';
 import Messages from '../screens/Messages';
+import FilterScreen from '../screens/FilterScreen';
+import SearchListScreen from '../screens/SearchListScreen';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -140,6 +142,20 @@ export default function AppNavigator({ initialRouteName = 'Carousel' }) {
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
           headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen 
+        name="Filter" 
+        component={FilterScreen} 
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen 
+        name="SearchList" 
+        component={SearchListScreen} 
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
