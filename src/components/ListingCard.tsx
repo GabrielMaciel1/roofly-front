@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { createStyles } from './ListingCard.styles';
@@ -18,37 +18,64 @@ export interface Listing {
 interface ListingCardProps {
   listing: Listing;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress, style }) => {
   const colors = useTheme();
   const styles = createStyles(colors);
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.listingCard}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.listingCard, style]}
+    >
       <Image source={listing.image} style={styles.listingImage} />
+
       <View style={styles.listingRatingContainer}>
         <MaterialCommunityIcons name="star" size={14} color={colors.star} />
         <Text style={styles.listingRatingText}>{listing.rating}</Text>
       </View>
+
       <View style={styles.listingInfo}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 4,
+          }}
+        >
           <View style={styles.listingTypeLabel}>
             <Text style={styles.listingTypeLabelText}>{listing.type}</Text>
           </View>
+
           <View style={styles.listingPriceContainer}>
             <Text style={styles.listingPrice}>{listing.price}</Text>
             <Text style={styles.listingPeriod}>{listing.period}</Text>
           </View>
         </View>
+
         <Text style={styles.listingTitle}>{listing.title}</Text>
+
         <View style={styles.listingLocationAndHeartContainer}>
           <View style={styles.listingLocationContainer}>
-            <MaterialCommunityIcons name="map-marker" size={14} color={colors.button} />
-            <Text style={styles.listingLocationText}>{listing.location}</Text>
+            <MaterialCommunityIcons
+              name="map-marker"
+              size={14}
+              color={colors.button}
+            />
+            <Text style={styles.listingLocationText}>
+              {listing.location}
+            </Text>
           </View>
+
           <TouchableOpacity style={styles.heartIconContainer}>
-            <MaterialCommunityIcons name="heart-outline" size={20} color={colors.button} />
+            <MaterialCommunityIcons
+              name="heart-outline"
+              size={20}
+              color={colors.button}
+            />
           </TouchableOpacity>
         </View>
       </View>

@@ -7,7 +7,6 @@ export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
       width: 250,
       backgroundColor: colors.card,
       borderRadius: 24,
-      marginRight: 18,
       overflow: 'hidden',
       borderWidth: 1,
       borderColor: colors.border,

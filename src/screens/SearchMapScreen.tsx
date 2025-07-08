@@ -1,31 +1,23 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useSearchScreen } from '../hooks/useSearchScreen';
-import ListingCard from '../components/ListingCard';
-import { createSearchMapStyles } from '../styles/SearchMapScreen.styles';
-import { useThemeContext } from '../contexts/ThemeContext';
+import React, { useMemo } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
+import { useSearchScreen } from '../hooks/useSearchScreen'
+import ListingCard from '../components/ListingCard'
+import { createSearchMapStyles } from '../styles/SearchMapScreen.styles'
+import { useThemeContext } from '../contexts/ThemeContext'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../types'
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
-
-type SearchMapScreenProps = NativeStackScreenProps<RootStackParamList, 'Search'>;
+type SearchMapScreenProps = NativeStackScreenProps<RootStackParamList, 'Search'>
 
 const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
-  const { colors, theme } = useThemeContext();
-  const styles = createSearchMapStyles(colors);
-  const {
-    location,
-    region,
-    setRegion,
-    nearbyListings,
-    bottomSheetRef,
-    snapPoints,
-  } = useSearchScreen();
-
-  const featuredListing = nearbyListings.length > 0 ? nearbyListings[0] : null;
+  const { colors, theme } = useThemeContext()
+  const styles = createSearchMapStyles(colors)
+  const { location, region, setRegion, nearbyListings, bottomSheetRef } = useSearchScreen()
+  const featuredListing = nearbyListings.length > 0 ? nearbyListings[0] : null
+  const snapPoints = useMemo(() => [400], [])
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -46,7 +38,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
             }}
             title="Você"
           >
-            <View style={styles.userMarker} >
+            <View style={styles.userMarker}>
               <MaterialCommunityIcons name="account" size={20} color="#fff" />
             </View>
           </Marker>
@@ -84,12 +76,14 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
       {featuredListing && (
         <BottomSheet
           ref={bottomSheetRef}
-          index={0}
-          snapPoints={[280]}
+          index={1}
+          snapPoints={snapPoints}
           backgroundStyle={{ backgroundColor: colors.card, borderRadius: 30 }}
+
         >
           <BottomSheetView style={styles.bottomSheetContent}>
             <ListingCard
+            style={{width: '100%'}}
               listing={{
                 id: featuredListing.id,
                 title: featuredListing.titulo,
@@ -100,7 +94,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
                 image: featuredListing.fotos[0],
                 type: featuredListing.imovelType === 'Casa' ? 'House' : 'Apartment',
               }}
-              onPress={() => { /* Implementar navegação para detalhes do imóvel */ }}
+              onPress={() => {}}
             />
           </BottomSheetView>
         </BottomSheet>
@@ -124,7 +118,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default SearchMapScreen;
+export default SearchMapScreen

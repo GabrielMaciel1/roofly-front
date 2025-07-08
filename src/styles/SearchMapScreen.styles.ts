@@ -75,6 +75,7 @@ export const createSearchMapStyles = (colors: AppTheme) => StyleSheet.create({
   bottomSheetContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    alignItems: 'center',
   },
   bottomNavBar: {
     flexDirection: 'row',
