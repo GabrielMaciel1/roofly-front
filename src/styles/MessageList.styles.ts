@@ -5,52 +5,60 @@ export const createMessageListStyles = (colors: typeof lightColors | typeof dark
   StyleSheet.create({
     messageContainer: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
-      padding: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-      backgroundColor: colors.card,
-      marginBottom: 10,
-      borderRadius: 10,
-      marginHorizontal: 10,
+      alignItems: 'center',
+      paddingVertical: 16,
+    },
+    avatarContainer: {
+      marginRight: 16,
     },
     avatar: {
-      width: 60,
-      height: 60,
-      borderRadius: 50,
-      marginRight: 10,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+    },
+    onlineIndicator: {
+      position: 'absolute',
+      bottom: 2,
+      right: 2,
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: colors.primary,
+      borderWidth: 2,
+      borderColor: colors.background,
     },
     messageContent: {
       flex: 1,
     },
-    messageHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
     senderName: {
+      fontSize: 16,
       fontWeight: 'bold',
       color: colors.text,
+      marginBottom: 4,
     },
-    unreadBadge: {
-      backgroundColor: colors.button,
-      borderRadius: 50,
-      height: 20,
-      width: 20,
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
+    messageText: {
+      fontSize: 14,
+      color: colors.description,
     },
-    unreadCountText: {
-      color: colors.buttonText,
-      fontSize: 12,
+    messageInfo: {
+      alignItems: 'flex-end',
     },
     timestamp: {
       fontSize: 12,
       color: colors.description,
+      marginBottom: 8,
     },
-    messageText: {
-      marginTop: 5,
-      maxWidth: 250,
-      color: colors.text,
+    unreadBadge: {
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      width: 24,
+      height: 24,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    unreadCountText: {
+      color: '#fff',
+      fontSize: 12,
+      fontWeight: 'bold',
     },
   });

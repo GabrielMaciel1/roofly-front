@@ -7,7 +7,9 @@ export type RootStackParamList = {
   PropertyDetails: { propertyId: string };
   Settings: undefined;
   ThemeSelection: undefined;
-};
+  MessageDetails: { contactName: string };
+  Filter: undefined;
+  SearchList: undefined;
 
 export type TabParamList = {
   Home: undefined;

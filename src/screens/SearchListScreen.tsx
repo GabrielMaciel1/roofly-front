@@ -17,6 +17,9 @@ const SearchListScreen: React.FC<SearchListScreenProps> = ({ navigation }) => {
     setSearch,
     nearbyListings,
   } = useSearchScreen();
+  const [activeFilter, setActiveFilter] = React.useState('All');
+
+  const filters = ['All', 'House', 'Villa', 'Apartment'];
 
   const renderListItem = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.resultItem}>
@@ -50,6 +53,20 @@ const SearchListScreen: React.FC<SearchListScreenProps> = ({ navigation }) => {
         <TouchableOpacity style={styles.filterButton}>
           <MaterialCommunityIcons name="tune" size={22} color={colors.text} />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.filterContainer}>
+        {filters.map(filter => (
+          <TouchableOpacity
+            key={filter}
+            style={[styles.filterOption, activeFilter === filter && styles.activeFilterOption]}
+            onPress={() => setActiveFilter(filter)}
+          >
+            <Text style={[styles.filterText, activeFilter === filter && styles.activeFilterText]}>
+              {filter}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <TouchableOpacity style={styles.currentLocationButton}>

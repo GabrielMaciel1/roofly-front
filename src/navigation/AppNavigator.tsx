@@ -14,9 +14,10 @@ import ThemeSelectionScreen from '../screens/ThemeSelectionScreen';
 import { Ionicons } from '@expo/vector-icons';
 import SearchMapScreen from '../screens/SearchMapScreen';
 
-import Saved from '../screens/Saved';
+import FavoriteScreen from '../screens/FavoriteScreen';
 import Messages from '../screens/Messages';
 import FilterScreen from '../screens/FilterScreen';
+import MessageDetailsScreen from '../screens/MessageDetailsScreen';
 import SearchListScreen from '../screens/SearchListScreen';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -59,13 +60,15 @@ function HomeTabs() {
           marginRight: 10,
           bottom: 20,
           height: 50,
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarIconStyle: {
           justifyContent: 'center',
           flex: 1
         },
-      })}
-    >
+      })}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -87,8 +90,8 @@ function HomeTabs() {
       />
 
       <Tab.Screen
-        name="Saved"
-        component={Saved}
+        name="Favorite"
+        component={FavoriteScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="heart" size={24} color={color} />
@@ -100,7 +103,7 @@ function HomeTabs() {
           name="Messages"
           component={Messages}
           options={{
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <Ionicons name="chatbox" size={24} color={color} />
             ),
@@ -155,6 +158,13 @@ export default function AppNavigator({ initialRouteName = 'Carousel' }) {
       <Stack.Screen 
         name="SearchList" 
         component={SearchListScreen} 
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen 
+        name="MessageDetails" 
+        component={MessageDetailsScreen} 
         options={{
           headerShown: false,
         }}

@@ -11,7 +11,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { api } from '../utils/api';
+import { api, anotherApi } from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
 import ListingCard, { Listing } from '../components/ListingCard';
@@ -37,7 +37,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }));
   };
 
-  const allListings = transformListingData([...api]);
+  const allListings = transformListingData([...api, ...anotherApi]);
   const popularListings = allListings.slice(0, 3);
   const nearbyListings = allListings.slice(3, 6);
 
@@ -124,8 +124,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {nearbyListings.map(listing => (
-              <ListingCard key={listing.id} listing={listing} style={{ marginRight: 16 }} />
+            {popularListings.map(listing => (
+              <ListingCard
+                key={listing.id}
+                listing={listing}
+                onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                style={{ marginRight: 16 }}
+              />
             ))}
           </ScrollView>
         </View>

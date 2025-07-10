@@ -4,7 +4,6 @@ import { lightColors, darkColors } from '../theme/colors';
 export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
     listingCard: {
-      width: 250,
       backgroundColor: colors.card,
       borderRadius: 24,
       overflow: 'hidden',

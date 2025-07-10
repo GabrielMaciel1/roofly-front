@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { lightColors, darkColors } from '../theme/colors';
 
-export const createSavedScreenStyles = (colors: typeof lightColors | typeof darkColors) => StyleSheet.create({
+export const createFavoriteScreenStyles = (colors: typeof lightColors | typeof darkColors) => StyleSheet.create({
   highlightsContainer: {
     flex: 1,
     backgroundColor: colors.background,
@@ -18,6 +18,9 @@ export const createSavedScreenStyles = (colors: typeof lightColors | typeof dark
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  headerIcons: {
+    flexDirection: 'row',
   },
   noFavoritesContainer: {
     flex: 1,
@@ -45,39 +48,39 @@ export const createSavedScreenStyles = (colors: typeof lightColors | typeof dark
     marginBottom: 20,
     paddingHorizontal: 20,
   },
-  filterButton: {
+  filterOption: {
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.card,
   },
-  activeFilterButton: {
+  activeFilterOption: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  filterButtonText: {
+  filterText: {
     color: colors.text,
     fontWeight: 'bold',
   },
-  activeFilterButtonText: {
+  activeFilterText: {
     color: '#fff',
   },
   listingListContainer: {
+    flex: 1,
     paddingHorizontal: 20,
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   modalContent: {
     backgroundColor: colors.background,
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
-    width: '90%',
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 18,
@@ -88,6 +91,7 @@ export const createSavedScreenStyles = (colors: typeof lightColors | typeof dark
   modalButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    width: '100%',
   },
   modalButton: {
     paddingVertical: 12,

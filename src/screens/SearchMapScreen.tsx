@@ -24,7 +24,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
       <MapView
         key={theme}
         provider={PROVIDER_GOOGLE}
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingBottom: 70 }}
         region={region}
         customMapStyle={colors.theme === 'dark' ? JSON.stringify(styles.mapDarkStyle) : []}
         showsUserLocation
@@ -78,7 +78,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
           ref={bottomSheetRef}
           index={1}
           snapPoints={snapPoints}
-          backgroundStyle={{ backgroundColor: colors.card, borderRadius: 30 }}
+          backgroundStyle={{ backgroundColor: colors.background, borderRadius: 30 }}
 
         >
           <BottomSheetView style={styles.bottomSheetContent}>
@@ -100,23 +100,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
         </BottomSheet>
       )}
 
-      <View style={[styles.bottomNavBar, { backgroundColor: colors.card }]}>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="home" size={24} color={colors.description} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="magnify" size={24} color={colors.primary} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="heart-outline" size={24} color={colors.description} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="bookmark-outline" size={24} color={colors.description} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="account-outline" size={24} color={colors.description} />
-        </TouchableOpacity>
-      </View>
+      
     </View>
   )
 }

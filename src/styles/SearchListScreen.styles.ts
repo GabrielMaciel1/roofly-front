@@ -39,6 +39,29 @@ export const createSearchListStyles = (colors: typeof lightColors | typeof darkC
   filterButton: {
     padding: 5,
   },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  filterOption: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  activeFilterOption: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  filterText: {
+    color: colors.text,
+    fontWeight: 'bold',
+  },
+  activeFilterText: {
+    color: '#fff',
+  },
   currentLocationButton: {
     flexDirection: 'row',
     alignItems: 'center',

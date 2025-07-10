@@ -18,16 +18,18 @@ export interface Listing {
 interface ListingCardProps {
   listing: Listing;
   onPress?: () => void;
+  onLongPress?: () => void;
   style?: StyleProp<ViewStyle>;
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress, style }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress, onLongPress, style }) => {
   const colors = useTheme();
   const styles = createStyles(colors);
 
   return (
     <TouchableOpacity
       onPress={onPress}
+      onLongPress={onLongPress}
       style={[styles.listingCard, style]}
     >
       <Image source={listing.image} style={styles.listingImage} />
