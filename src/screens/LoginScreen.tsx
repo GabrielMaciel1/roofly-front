@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Alert, Image, Switch } from 'react-native
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import db from '../database/database';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createLoginStyles } from '../styles/LoginScreen.styles';
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';

@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { api } from '../utils/api';
 import ListingCard from '../components/ListingCard';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createSavedScreenStyles } from '../styles/SavedScreen.styles';
 
 type SavedScreenProps = {
@@ -35,10 +35,11 @@ const Saved: React.FC<SavedScreenProps> = ({ navigation }) => {
         {favoritedListings.length > 0 ? (
           favoritedListings.map(listing => (
             <ListingCard
-              key={listing.id}
-              listing={listing}
-              onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
-            />
+                key={listing.id}
+                listing={listing}
+                onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                style={{ marginBottom: 16 }}
+              />
           ))
         ) : (
           <View style={styles.noFavoritesContainer}>

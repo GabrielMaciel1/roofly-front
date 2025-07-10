@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { AppTheme } from '../theme/theme';
+import { lightColors, darkColors } from '../theme/colors';
 
-export const createSavedScreenStyles = (colors: AppTheme) => StyleSheet.create({
+export const createSavedScreenStyles = (colors: typeof lightColors | typeof darkColors) => StyleSheet.create({
   highlightsContainer: {
     flex: 1,
     backgroundColor: colors.background,

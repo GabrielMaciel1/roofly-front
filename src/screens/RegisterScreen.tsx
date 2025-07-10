@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import db from '../database/database';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createRegisterStyles } from '../styles/RegisterScreen.styles';
 import StyledTextInput from '../components/common/StyledTextInput';
 

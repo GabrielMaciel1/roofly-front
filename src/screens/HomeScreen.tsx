@@ -110,6 +110,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 key={listing.id}
                 listing={listing}
                 onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                style={{ marginRight: 16 }}
               />
             ))}
           </ScrollView>
@@ -124,7 +125,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
             {nearbyListings.map(listing => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} listing={listing} style={{ marginRight: 16 }} />
             ))}
           </ScrollView>
         </View>

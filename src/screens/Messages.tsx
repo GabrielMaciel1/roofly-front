@@ -1,7 +1,7 @@
 import MessageList from '../components/MessageList';
 import React from 'react';
 import { View, Text } from 'react-native';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createMessagesScreenStyles } from '../styles/MessagesScreen.styles';
 
 const messages = [

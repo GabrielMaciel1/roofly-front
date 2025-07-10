@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { AppTheme } from '../theme/theme';
+import { lightColors, darkColors } from '../theme/colors';
 
-export const createFilterStyles = (colors: AppTheme) => StyleSheet.create({
+export const createFilterStyles = (colors: typeof lightColors | typeof darkColors) => StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,

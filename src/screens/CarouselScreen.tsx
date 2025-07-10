@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createCarouselStyles } from '../styles/CarouselScreen.styles';
 
 const slides = [

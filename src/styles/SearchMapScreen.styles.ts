@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { AppTheme } from '../theme/theme';
+import { lightColors, darkColors } from '../theme/colors';
 
-export const createSearchMapStyles = (colors: AppTheme) => StyleSheet.create({
+export const createSearchMapStyles = (colors: typeof lightColors | typeof darkColors) => StyleSheet.create({
   topContainer: {
     position: 'absolute',
     top: 50,

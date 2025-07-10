@@ -6,7 +6,7 @@ interface Message {
   content: string;
   avatar?: string;
   unread?: number;
-  id: string;
+  id: number;
 }
 
 export function useMessageList(messages: Message[]) {

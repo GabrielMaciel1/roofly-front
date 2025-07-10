@@ -12,7 +12,8 @@ import PropertyDetailsScreen from '../screens/PropertyDetailsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ThemeSelectionScreen from '../screens/ThemeSelectionScreen';
 import { Ionicons } from '@expo/vector-icons';
-import Search from '../screens/Search';
+import SearchMapScreen from '../screens/SearchMapScreen';
+
 import Saved from '../screens/Saved';
 import Messages from '../screens/Messages';
 import FilterScreen from '../screens/FilterScreen';
@@ -77,7 +78,7 @@ function HomeTabs() {
 
       <Tab.Screen
         name="Search"
-        component={Search}
+        component={SearchMapScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="search" size={24} color={color} />

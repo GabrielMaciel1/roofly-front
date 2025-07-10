@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, Image } from 'react-native';
-import useTheme from '../theme/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createMessageListStyles } from '../styles/MessageList.styles';
 import { useMessageList } from '../hooks/useMessageList';
 
