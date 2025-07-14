@@ -131,8 +131,8 @@ export default function AppNavigator({ initialRouteName = 'Carousel' }) {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Carousel" component={CarouselScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true, title: 'Login' }} />
-      <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: true, title: 'Cadastro' }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: true, title: 'Recuperar Senha' }} />
       <Stack.Screen name="Home" component={HomeTabs} />
       <Stack.Screen name="PropertyDetails" component={PropertyDetailsScreen} options={{ headerShown: true, title: 'Detalhes do Imóvel' }} />

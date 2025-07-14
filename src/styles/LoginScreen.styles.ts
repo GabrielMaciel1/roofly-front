@@ -65,9 +65,11 @@ export const createLoginStyles = (colors: typeof lightColors | typeof darkColors
     },
     forgotPasswordText: {
       color: colors.secondary,
-      fontSize: 14,
-      textAlign: 'right',
-      flex: 1,
+      fontSize: 16,
+      marginTop: 10,
+      marginBottom: 15,
+      textAlign: 'center',
+      fontWeight: 'bold',
     },
     button: {
       backgroundColor: colors.button,

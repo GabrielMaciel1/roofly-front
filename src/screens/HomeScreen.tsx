@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   StatusBar,
   SafeAreaView,
+  ActivityIndicator
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { api, anotherApi } from '../utils/api';
+import api from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
 import ListingCard, { Listing } from '../components/ListingCard';
@@ -24,8 +25,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createHomeStyles(colors);
 
-  const transformListingData = (data: any[]): Listing[] => {
-    return data.map(item => ({
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const transformListingData = (data: any[]): Listing[] =>
+    data.map(item => ({
       id: item.id,
       title: item.titulo,
       location: `${item.endereco.cidade}, ${item.endereco.estado}`,
@@ -35,11 +39,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       image: item.fotos[0],
       type: item.imovelType === 'Casa' ? 'House' : 'Apartment',
     }));
-  };
 
-  const allListings = transformListingData([...api, ...anotherApi]);
-  const popularListings = allListings.slice(0, 3);
-  const nearbyListings = allListings.slice(3, 6);
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await api.get('/api/listings');
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setListings(transformListingData(response.data));
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchListings();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.button} />
+      </View>
+    );
+  }
+
+  const popularListings = listings.slice(0, 3);
+  const nearbyListings = listings.slice(3, 6);
 
   const categories = [
     { name: 'Casa', icon: 'home' as const },
@@ -61,7 +87,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={colors.text === '#FFFFFF' ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
+      <StatusBar
+        barStyle={colors.text === '#FFFFFF' ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.locationContainer}>
@@ -124,7 +153,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {popularListings.map(listing => (
+            {nearbyListings.map(listing => (
               <ListingCard
                 key={listing.id}
                 listing={listing}

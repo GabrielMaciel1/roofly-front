@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator, Linking } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import db from '../database/database';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Checkbox from 'expo-checkbox';
+
+import api from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createRegisterStyles } from '../styles/RegisterScreen.styles';
 import StyledTextInput from '../components/common/StyledTextInput';
@@ -12,83 +15,133 @@ type RegisterScreenProps = {
 };
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
   const colors = useTheme();
   const styles = createRegisterStyles(colors);
 
   const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
+    if (!fullName || !email || !password || !confirmPassword) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Erro', 'As senhas não coincidem');
+      Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
 
-    try {
-      const result = await db.runAsync(
-        'INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)',
-        [name, email, password, phone]
-      );
+    if (!agreeToTerms) {
+      Alert.alert('Erro', 'Você deve concordar com os Termos de Serviço e a Política de Privacidade.');
+      return;
+    }
 
-      if (result.lastInsertRowId) {
+    setLoading(true);
+    try {
+      const response = await api.post('/api/auth/register', { name: fullName, email, password, phone });
+      console.log(response)
+      if (response.data.success) {
         Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
         navigation.navigate('Login');
+      } else {
+        Alert.alert('Erro', response.data.message || 'Erro ao cadastrar usuário.');
       }
-    } catch (error) {
-      Alert.alert('Erro', 'Erro ao cadastrar usuário');
+    } catch (error: any) {
+      console.log(error)
+      const errorMessage = error.response?.data?.message || 'Erro ao cadastrar usuário. Verifique sua conexão ou tente novamente.';
+      Alert.alert('Erro', errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cadastro</Text>
+      <View style={styles.avatarContainer}>
+        <Ionicons name="person-add-outline" size={styles.avatarIcon.fontSize} color={styles.avatarIcon.color} />
+      </View>
+      <Text style={styles.title}>Create your account</Text>
+
       <StyledTextInput
-        label="Nome"
-        placeholder="Nome *"
-        value={name}
-        onChangeText={setName}
+        label="Full Name"
+        placeholder="John Doe"
+        value={fullName}
+        onChangeText={setFullName}
       />
       <StyledTextInput
         label="Email"
-        placeholder="Email *"
+        placeholder="example@youremail.com"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       <StyledTextInput
-        label="Senha"
-        placeholder="Senha *"
+        label="Password"
+        placeholder="........."
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        isPassword
       />
       <StyledTextInput
-        label="Confirmar Senha"
-        placeholder="Confirmar Senha *"
+        label="Confirm Password"
+        placeholder="........."
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        secureTextEntry
+        isPassword
       />
       <StyledTextInput
-        label="Telefone"
-        placeholder="Telefone"
+        label="Phone"
+        placeholder="+55 (11) 91234-5678"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
+
+      <View style={styles.termsContainer}>
+        <Checkbox
+          value={agreeToTerms}
+          onValueChange={setAgreeToTerms}
+          color={agreeToTerms ? colors.primary : undefined}
+        />
+        <Text style={styles.termsText}>
+          I agree to the <Text style={styles.termsLink} onPress={() => Linking.openURL('https://example.com/terms')}>Terms of Service</Text>
+          and <Text style={styles.termsLink} onPress={() => Linking.openURL('https://example.com/privacy')}>Privacy Policy</Text>
+        </Text>
+      </View>
+      
+      <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color={colors.background} />
+        ) : (
+          <Text style={styles.buttonText}>Sign up</Text>
+        )}
       </TouchableOpacity>
+
+      <View style={styles.separatorContainer}>
+        <View style={styles.separatorLine} />
+        <Text style={styles.separatorText}>or continue with</Text>
+        <View style={styles.separatorLine} />
+      </View>
+
+      <View style={styles.socialButtonContainer}>
+        <TouchableOpacity style={styles.socialButton}>
+          <Ionicons name="logo-facebook" size={24} color="#1877F2" />
+          <Text style={styles.socialButtonText}>Facebook</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.socialButton}>
+          <Ionicons name="logo-google" size={24} color="#DB4437" />
+          <Text style={styles.socialButtonText}>Google</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Já tem uma conta? Faça login</Text>
+        <Text style={styles.link}>Already have an account? <Text style={{ fontWeight: 'bold' }}>Sign in</Text></Text>
       </TouchableOpacity>
     </View>
   );

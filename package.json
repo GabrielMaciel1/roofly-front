@@ -20,17 +20,18 @@
     "@react-navigation/stack": "^7.3.2",
     "axios": "^1.9.0",
     "expo": "~52.0.46",
+    "expo-checkbox": "^4.1.4",
     "expo-linear-gradient": "~14.0.2",
     "expo-location": "~18.0.10",
     "expo-splash-screen": "^0.30.8",
-    "expo-sqlite": "~15.1.4",
     "lodash": "^4.17.21",
     "react": "18.3.1",
     "react-icons": "^5.5.0",
     "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-maps": "1.18.0",
-    "react-native-reanimated": "~3.16.1"
+    "react-native-reanimated": "~3.16.1",
+    "react-native-svg": "^15.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

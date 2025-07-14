@@ -5,9 +5,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Font from 'expo-font'; // Import Font
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 
 import AppNavigator from './src/navigation/AppNavigator';
-import { initDatabase } from './src/database/database';
+
 
 import { ThemeProvider } from './src/contexts/ThemeContext';
 
@@ -20,7 +22,9 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        await initDatabase();
+        // Load fonts
+        await Font.loadAsync(Ionicons.font);
+
         const user = await AsyncStorage.getItem('user');
         setInitialRoute(user ? 'Home' : 'Carousel');
       } catch (error) {

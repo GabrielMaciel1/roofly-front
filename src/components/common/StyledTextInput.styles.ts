@@ -9,16 +9,24 @@ export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
     label: {
       color: colors.text,
       fontSize: 14,
-      marginBottom: 10,
-      marginLeft: 15,
+      marginBottom: 8,
     },
-    input: {
+    inputWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
       height: 50,
       borderWidth: 1,
-      borderColor: colors.primary,
-      borderRadius: 50,
+      borderColor: colors.text,
+      borderRadius: 10,
       paddingHorizontal: 15,
       backgroundColor: colors.background,
+    },
+    input: {
+      flex: 1,
       color: colors.text,
+      paddingRight: 10,
+    },
+    eyeIcon: {
+      padding: 5,
     },
   });

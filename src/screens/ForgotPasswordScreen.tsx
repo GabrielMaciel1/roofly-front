@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import db from '../database/database';
+
 import { useTheme } from '../contexts/ThemeContext';
 import { createForgotPasswordStyles } from '../styles/ForgotPasswordScreen.styles';
 import StyledTextInput from '../components/common/StyledTextInput';
@@ -22,20 +22,26 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
       return;
     }
 
+    // TODO: Substituir por chamada à API de recuperação de senha
     try {
-      const result = await db.getAllAsync(
-        'SELECT * FROM users WHERE email = ?',
-        [email]
-      );
+      // Simulação de chamada à API
+      const response = await fetch('http://your-backend-api.com/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      if (result.length > 0) {
+      if (response.ok) {
         Alert.alert(
           'Sucesso',
           'Um email foi enviado com instruções para recuperar sua senha'
         );
         navigation.navigate('Login');
       } else {
-        Alert.alert('Erro', 'Email não encontrado');
+        const errorData = await response.json();
+        Alert.alert('Erro', errorData.message || 'Email não encontrado');
       }
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro ao processar sua solicitação');

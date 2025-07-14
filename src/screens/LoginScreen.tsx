@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, Image, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, Switch, ActivityIndicator } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import db from '../database/database';
+import api from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createLoginStyles } from '../styles/LoginScreen.styles';
 import { FontAwesome } from '@expo/vector-icons';
@@ -19,33 +19,48 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
   const colors = useTheme();
   const styles = createLoginStyles(colors);
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
-      return;
-    }
+  if (!email || !password) {
+    Alert.alert('Erro', 'Por favor, preencha todos os campos');
+    return;
+  }
 
-    try {
-      const result = await db.getAllAsync(
-        'SELECT * FROM users WHERE email = ? AND password = ?',
-        [email, password]
-      );
+  setLoading(true);
 
-      if (result.length > 0) {
-        await AsyncStorage.setItem('user', JSON.stringify(result[0]));
-        navigation.replace('Home');
-      } else {
-        Alert.alert('Erro', 'Email ou senha incorretos');
+  try {
+    const response = await api.post('/api/auth/login', { email, password });
+
+    if (response.status === 200 && response.data) {
+      if (response.data.user) {
+        await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+      } else if (response.data.token) {
+        await AsyncStorage.setItem('userToken', String(response.data.token));
       }
-    } catch (error) {
-      Alert.alert('Erro', 'Ocorreu um erro ao fazer login');
-      console.error(error);
+      navigation.replace('Home');
+    } else {
+      const errorMessage = response.data?.message || 'Resposta inesperada do servidor. Tente novamente.';
+      Alert.alert('Erro', errorMessage);
     }
-  };
 
+  } catch (error: any) {
+    console.error(error);
+    let errorMessage;
+    if (error && error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    } else if (error && error.message) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = 'Ocorreu um erro desconhecido. Verifique sua conexão ou tente novamente.';
+    }
+    Alert.alert('Erro', errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -71,6 +86,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          isPassword // Adicionado para o ícone de olho
         />
         <View style={styles.rememberMeRow}>
           <Switch
@@ -81,13 +97,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             style={styles.checkbox}
           />
           <Text style={styles.rememberMeText}>Lembrar-me</Text>
-		  <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-			<Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
-		  </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}> 
+        {loading ? (
+          <ActivityIndicator color={colors.background} />
+        ) : (
+          <Text style={styles.buttonText}>Entrar</Text>
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+        <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
       </TouchableOpacity>
       <Text style={styles.orText}>ou continue com</Text>
       <View style={styles.socialRow}>
