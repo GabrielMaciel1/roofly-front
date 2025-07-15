@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   StatusBar,
   SafeAreaView,
-  ActivityIndicator
+  ActivityIndicator,
+  Image
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -16,6 +17,7 @@ import api from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
 import ListingCard, { Listing } from '../components/ListingCard';
+import NoListingsFound from '../components/NoListingsFound';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -101,9 +103,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <MaterialCommunityIcons name="chevron-down" size={20} color={colors.text} style={{ marginLeft: 4 }} />
             </View>
           </View>
-          <TouchableOpacity style={styles.notificationButton}>
-            <MaterialCommunityIcons name="bell-outline" size={24} color={colors.button} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity style={styles.notificationButton}>
+              <MaterialCommunityIcons name="bell-outline" size={24} color={colors.button} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <Image source={require('../../assets/perfil.jpeg')} style={styles.avatar} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.searchContainer}>
@@ -133,16 +140,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {popularListings.map(listing => (
-              <ListingCard
-                key={listing.id}
-                listing={listing}
-                onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
-                style={{ marginRight: 16 }}
-              />
-            ))}
-          </ScrollView>
+          {popularListings.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
+              {popularListings.map(listing => (
+                <ListingCard
+                  key={listing.id}
+                  listing={listing}
+                  onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                  style={{ marginRight: 16 }}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <NoListingsFound iconName="star-off" message="Nenhum imóvel popular encontrado no momento." />
+          )}
         </View>
 
         <View style={styles.section}>
@@ -152,16 +163,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
-            {nearbyListings.map(listing => (
-              <ListingCard
-                key={listing.id}
-                listing={listing}
-                onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
-                style={{ marginRight: 16 }}
-              />
-            ))}
-          </ScrollView>
+          {nearbyListings.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
+              {nearbyListings.map(listing => (
+                <ListingCard
+                  key={listing.id}
+                  listing={listing}
+                  onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                  style={{ marginRight: 16 }}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <NoListingsFound iconName="map-marker-off" message="Nenhum imóvel próximo encontrado no momento." />
+          )}
         </View>
 
         <View style={{ height: 20 }} />

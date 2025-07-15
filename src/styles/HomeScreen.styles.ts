@@ -38,6 +38,12 @@ export const createHomeStyles = (colors: typeof lightColors | typeof darkColors)
       width: 48,
       height: 48,
     },
+    avatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 12,
+      marginLeft: 10,
+    },
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
