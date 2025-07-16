@@ -57,7 +57,7 @@ export const createSearchMapStyles = (colors: typeof lightColors | typeof darkCo
     borderRadius: 20,
     padding: 6,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: colors.card,
     backgroundColor: colors.primary,
   },
   listingMarker: {
@@ -65,11 +65,11 @@ export const createSearchMapStyles = (colors: typeof lightColors | typeof darkCo
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: colors.card,
     backgroundColor: colors.primary,
   },
   markerText: {
-    color: '#fff',
+    color: colors.buttonText,
     fontWeight: 'bold',
   },
   bottomSheetContent: {
@@ -89,7 +89,7 @@ export const createSearchMapStyles = (colors: typeof lightColors | typeof darkCo
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     elevation: 10,
-    shadowColor: '#000',
+    shadowColor: colors.title,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,

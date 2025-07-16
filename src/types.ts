@@ -10,6 +10,12 @@ export type RootStackParamList = {
   MessageDetails: { contactName: string };
   Filter: undefined;
   SearchList: undefined;
+};
+
+export type CreateListingStackParamList = {
+  SelectCategory: undefined;
+  CreateListing: { selectedCategory?: string };
+};
 
 export type TabParamList = {
   Home: undefined;
@@ -17,4 +23,5 @@ export type TabParamList = {
   Saved: undefined;
   Messages: undefined;
   Profile: undefined;
+  CreateListingTab: undefined;
 };

@@ -57,7 +57,7 @@ export const createMessageListStyles = (colors: typeof lightColors | typeof dark
       alignItems: 'center',
     },
     unreadCountText: {
-      color: '#fff',
+      color: colors.buttonText,
       fontSize: 12,
       fontWeight: 'bold',
     },

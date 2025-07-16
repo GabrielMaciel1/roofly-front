@@ -60,14 +60,14 @@ export const createMessageDetailsScreenStyles = (colors: typeof lightColors | ty
       borderBottomRightRadius: 10,
     },
     sentMessageText: {
-      color: '#fff',
+      color: colors.buttonText,
     },
     receivedMessageText: {
       color: colors.text,
     },
     sentMessageTime: {
       fontSize: 10,
-      color: 'rgba(255,255,255,0.7)',
+      color: colors.buttonText,
       alignSelf: 'flex-end',
       marginTop: 5,
     },

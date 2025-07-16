@@ -1,40 +1,57 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface NoListingsFoundProps {
-  iconName: string;
-  message: string;
+  imageSource: any;
+  mainMessage: string;
+  subMessage?: string;
+  imageSize?: number;
 }
 
-const NoListingsFound: React.FC<NoListingsFoundProps> = ({ iconName, message }) => {
+const NoListingsFound: React.FC<NoListingsFoundProps> = ({ imageSource, mainMessage, subMessage, imageSize = 120 }) => {
   const colors = useTheme();
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
+      flexDirection: 'row',
       alignItems: 'center',
-      padding: 20,
-      minHeight: 150, // Garante que o componente tenha uma altura mínima para ser visível
+      backgroundColor: colors.card,
+      borderRadius: 8,
+      padding: 16,
+      marginVertical: 8,
+      width: '90%',
+      alignSelf: 'center',
+      minHeight: 150,
     },
     icon: {
-      marginBottom: 10,
+      width: imageSize,
+      height: imageSize,
+      marginRight: 16,
+      resizeMode: 'contain',
     },
-    message: {
+    messageContainer: {
+      flex: 1,
+    },
+    mainMessage: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 4,
+    },
+    subMessage: {
       fontSize: 16,
-      textAlign: 'center',
       color: colors.text,
     },
   });
 
   return (
     <View style={styles.container}>
-      <MaterialCommunityIcons name={iconName as any} size={50} color={colors.button} style={styles.icon} />
-      <Text style={styles.message}>
-        {message}
-      </Text>
+      <Image source={imageSource} style={styles.icon} />
+      <View style={styles.messageContainer}>
+        <Text style={styles.mainMessage}>{mainMessage}</Text>
+        {subMessage && <Text style={styles.subMessage}>{subMessage}</Text>}
+      </View>
     </View>
   );
 };

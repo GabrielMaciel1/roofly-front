@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RootStackParamList, TabParamList } from '../types';
+import { RootStackParamList, TabParamList, CreateListingStackParamList } from '../types';
 import CarouselScreen from '../screens/CarouselScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -20,17 +20,30 @@ import FilterScreen from '../screens/FilterScreen';
 import MessageDetailsScreen from '../screens/MessageDetailsScreen';
 import SearchListScreen from '../screens/SearchListScreen';
 import { useTheme } from '../contexts/ThemeContext';
+import CreateListingScreen from '../screens/CreateListingScreen';
+import SelectCategoryScreen from '../screens/SelectCategoryScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
+const CreateListingStack = createNativeStackNavigator<CreateListingStackParamList>();
 
 const iconNames: Record<string, keyof typeof Ionicons["glyphMap"]> = {
   index: "home",
   Saved: "heart",
   Messages: "chatbox",
   Search: "search",
+  CreateListingTab: "add-circle",
   Profile: "person",
 };
+
+function CreateListingStackScreen() {
+  return (
+    <CreateListingStack.Navigator screenOptions={{ headerShown: false }}>
+      <CreateListingStack.Screen name="SelectCategory" component={SelectCategoryScreen} />
+      <CreateListingStack.Screen name="CreateListing" component={CreateListingScreen} />
+    </CreateListingStack.Navigator>
+  );
+}
 
 function HomeTabs() {
   const colors = useTheme();
@@ -50,10 +63,10 @@ function HomeTabs() {
           );
         },
         tabBarLabel: () => null,
-        tabBarInactiveTintColor: colors.tabInactive,
-        tabBarActiveTintColor: colors.tabActive,
+        tabBarInactiveTintColor: colors.text,
+        tabBarActiveTintColor: colors.buttonText,
         tabBarStyle: {
-          backgroundColor: colors.card,
+          backgroundColor: colors.button,
           borderRadius: 30,
           position: "absolute",
           marginLeft: 10,
@@ -100,15 +113,33 @@ function HomeTabs() {
       />
 
       <Tab.Screen
-          name="Messages"
-          component={Messages}
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="chatbox" size={24} color={color} />
-            ),
-          }}
-        />
+        name="Messages"
+        component={Messages}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbox" size={24} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="CreateListingTab"
+        component={CreateListingStackScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="add-circle" size={24} color={color} />
+          ),
+        }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // Prevent default action
+            e.preventDefault();
+            // Reset the stack to the first screen (SelectCategoryScreen)
+            navigation.navigate('CreateListingTab', { screen: 'SelectCategory' });
+          },
+        })}
+      />
       
       <Tab.Screen
         name="Profile"

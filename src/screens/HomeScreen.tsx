@@ -105,7 +105,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity style={styles.notificationButton}>
-              <MaterialCommunityIcons name="bell-outline" size={24} color={colors.button} />
+              <MaterialCommunityIcons name="bell" size={24} color={colors.button} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
               <Image source={require('../../assets/perfil.jpeg')} style={styles.avatar} />
@@ -152,7 +152,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               ))}
             </ScrollView>
           ) : (
-            <NoListingsFound iconName="star-off" message="Nenhum imóvel popular encontrado no momento." />
+            <NoListingsFound
+              imageSource={require('../../assets/icon_empty_house_sleep.png')}
+              mainMessage="Ops! Ainda não há sugestões por aqui."
+              subMessage="Explore as categorias acima"
+              imageSize={120}
+            />
           )}
         </View>
 
@@ -175,7 +180,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               ))}
             </ScrollView>
           ) : (
-            <NoListingsFound iconName="map-marker-off" message="Nenhum imóvel próximo encontrado no momento." />
+            <NoListingsFound
+              imageSource={require('../../assets/icon_empty_house_sleep.png')}
+              mainMessage="Não há imóveis nas proximidades no momento"
+              subMessage="Explore outras regiões ou ajuste seus filtros."
+              imageSize={120}
+            />
           )}
         </View>
 

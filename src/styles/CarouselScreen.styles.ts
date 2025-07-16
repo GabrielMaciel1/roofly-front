@@ -31,7 +31,7 @@ export const createCarouselStyles = (colors: typeof lightColors | typeof darkCol
       paddingHorizontal: 24,
       alignItems: 'center',
       backgroundColor: colors.card,
-      shadowColor: '#000',
+      shadowColor: colors.title,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
       shadowRadius: 8,

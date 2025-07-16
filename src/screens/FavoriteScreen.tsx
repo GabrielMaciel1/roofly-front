@@ -22,7 +22,7 @@ const FavoriteScreen: React.FC<FavoriteScreenProps> = ({ navigation }) => {
   const filters = ['All', 'House', 'Villa', 'Apartment'];
 
   const [currentFavoritedListings, setCurrentFavoritedListings] = useState<Listing[]>(
-    [...api, ...anotherApi].map(item => ({
+    [...(api || []), ...(anotherApi || [])].map(item => ({
       id: item.id,
       title: item.titulo,
       location: `${item.endereco.cidade}, ${item.endereco.estado}`,

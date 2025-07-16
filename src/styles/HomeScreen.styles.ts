@@ -31,7 +31,7 @@ export const createHomeStyles = (colors: typeof lightColors | typeof darkColors)
     },
     notificationButton: {
       padding: 10,
-      backgroundColor: colors.dot,
+      backgroundColor: 'transparent',
       borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center',
@@ -67,7 +67,7 @@ export const createHomeStyles = (colors: typeof lightColors | typeof darkColors)
       color: colors.description,
     },
     filterButton: {
-      backgroundColor: colors.dot,
+      backgroundColor: 'transparent',
       borderRadius: 12,
       padding: 12,
       width: 50,

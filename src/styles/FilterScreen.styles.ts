@@ -110,7 +110,7 @@ export const createFilterStyles = (colors: typeof lightColors | typeof darkColor
         marginLeft: 0,
     },
     applyButtonText: {
-        color: '#fff',
+        color: colors.buttonText,
         fontWeight: 'bold',
         fontSize: 16,
     },

@@ -60,7 +60,7 @@ export const createSearchListStyles = (colors: typeof lightColors | typeof darkC
     fontWeight: 'bold',
   },
   activeFilterText: {
-    color: '#fff',
+    color: colors.buttonText,
   },
   currentLocationButton: {
     flexDirection: 'row',

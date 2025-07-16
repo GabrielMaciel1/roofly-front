@@ -16,7 +16,7 @@ export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
       alignItems: 'center',
       height: 50,
       borderWidth: 1,
-      borderColor: colors.text,
+      borderColor: colors.border,
       borderRadius: 10,
       paddingHorizontal: 15,
       backgroundColor: colors.background,

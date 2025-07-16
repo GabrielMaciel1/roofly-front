@@ -64,29 +64,7 @@ export const createFavoriteScreenStyles = (colors: typeof lightColors | typeof d
     fontWeight: 'bold',
   },
   activeFilterText: {
-    color: '#fff',
-  },
-  listingListContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: colors.background,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 15,
+    color: colors.buttonText,
   },
   modalButtonsContainer: {
     flexDirection: 'row',
@@ -117,6 +95,6 @@ export const createFavoriteScreenStyles = (colors: typeof lightColors | typeof d
     color: colors.text,
   },
   modalRemoveButtonText: {
-    color: '#fff',
+    color: colors.buttonText,
   },
 });

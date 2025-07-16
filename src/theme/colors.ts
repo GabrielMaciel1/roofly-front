@@ -1,5 +1,5 @@
 export const lightColors = {
-  background: '#ffffff',
+  background: '#F5F5F5',
   card: '#FFFFFF',
   text: '#333333',
   title: '#000000',
@@ -7,13 +7,13 @@ export const lightColors = {
   button: '#FF8C00',
   buttonText: '#fff',
   secondary: '#FF8C00',
-  dot: '#E5EDFB',
+  dot: '#FFF0E0',
   activeDot: '#FF8C00',
-  tabInactive: '#999999',
+  tabInactive: '#B0B0B0',
   tabActive: '#FF8C00',
   border: '#E0E0E0',
   star: '#FFD700',
-  input: '#f5f6fa'
+  input: '#FFFFFF'
 };
 
 export const darkColors = {
@@ -25,7 +25,7 @@ export const darkColors = {
   button: '#FF8C00',
   buttonText: '#FFFFFF',
   secondary: '#FF8C00',
-  dot: '#1A2B4D',
+  dot: '#2C2C4C',
   activeDot: '#FF8C00',
   tabInactive: '#8E92B2',
   tabActive: '#FF8C00',
