@@ -13,7 +13,7 @@ type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 };
 
-const logoImage = require('../../assets/logo.png');
+const logoImage = require('../../assets/logo-roofly.png');
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');

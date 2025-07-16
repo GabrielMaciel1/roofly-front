@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "m2-front",
-    "slug": "m2-front",
+    "name": "rooffly-front",
+    "slug": "rooffly-front",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/logo-roofly.png",
       "resizeMode": "contain",
       "backgroundColor": "#18181b"
     },

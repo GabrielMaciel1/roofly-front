@@ -7,20 +7,19 @@ export const createLoginStyles = (colors: typeof lightColors | typeof darkColors
       flex: 1,
       justifyContent: 'center',
       padding: 20,
+      paddingTop: 0,
       backgroundColor: colors.background
     },
     logoContainer: {
       alignItems: 'center',
-      marginBottom: 8,
+      marginBottom: 0,
     },
     logoCircle: {
-      width: 350,
-      height: 100,
-      marginLeft: 20,
+      width: 220,
+      height: 220,
       backgroundColor: colors.background,
       alignItems: 'center',
       justifyContent: 'center',
-     
     },
     logoImage: {
       width: '80%',
