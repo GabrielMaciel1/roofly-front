@@ -1,111 +1,151 @@
-import { StyleSheet } from 'react-native';
-import { lightColors, darkColors } from '../theme/colors';
+// RegisterScreen.styles.ts
+import { StyleSheet } from 'react-native'
+import { lightColors, darkColors } from '../theme/colors'
 
 export const createRegisterStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
-    container: {
+    screen: {
       flex: 1,
-      justifyContent: 'center',
-      padding: 15,
-      paddingTop: 15,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background
+    },
+    container: {
+      paddingTop: 64,
+      paddingHorizontal: 24
     },
     avatarContainer: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: colors.button,
+      width: 130,
+      height: 130,
+      borderRadius: 65,
+      backgroundColor: '#ECEFF1',
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
-      marginBottom: 2,
+      marginBottom: 24,
+      borderWidth: 1,
+      borderColor: colors.border,
+      
+    },
+    avatarImage: {
+      width: 110,
+      height: 110,
+      borderRadius: 55
     },
     avatarIcon: {
-      color: colors.background,
-      fontSize: 40,
+      color: colors.button,
+      fontSize: 60
+    },
+    uploadText: {
+      color: colors.button,
+      fontSize: 14,
+      marginTop: 4
+    },
+    editIconContainer: {
+      position: 'absolute',
+      bottom: -25,
+      right: -25,
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: colors.button,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    editIcon: {
+      color: colors.card,
+      fontSize: 18
     },
     title: {
-      fontSize: 26,
-      fontWeight: 'bold',
+      fontSize: 24,
+      fontWeight: '700',
       textAlign: 'center',
-      marginBottom: 5,
-      color: colors.text,
+      marginBottom: 24,
+      color: colors.title
     },
     inputField: {
-      marginBottom: 2,
+      marginBottom: 16
     },
-    button: {
-      backgroundColor: colors.primary,
-      height: 45,
-      borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 0,
-      marginBottom: 0,
+    inputInner: {
+      height: 48,
+      paddingHorizontal: 12,
+      borderRadius: 8
     },
-    buttonText: {
-      color: colors.background,
-      fontSize: 16,
-      fontWeight: 'bold',
+    error: {
+      color: colors.secondary,
+      fontSize: 12,
+      marginBottom: 8,
+      marginLeft: 4
     },
     termsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 0,
+      marginBottom: 24
     },
     termsText: {
-      color: colors.text,
+      flex: 1,
       fontSize: 12,
-      marginLeft: 5,
+      color: colors.description,
+      marginLeft: 8,
+      lineHeight: 16
     },
-    termsLink: {
-      color: colors.primary,
-      fontWeight: 'bold',
+    link: {
+      color: colors.button,
+      fontWeight: '600'
+    },
+    button: {
+      backgroundColor: colors.button,
+      height: 48,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 32
+    },
+    buttonDisabled: {
+      opacity: 0.6
+    },
+    buttonText: {
+      color: colors.card,
+      fontSize: 16,
+      fontWeight: '600'
     },
     separatorContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginVertical: 10, // Increased margin
+      marginBottom: 24
     },
     separatorLine: {
       flex: 1,
       height: 1,
-      backgroundColor: colors.text,
-      opacity: 0.3,
+      backgroundColor: '#CFD8DC'
     },
     separatorText: {
-      width: 150,
-      textAlign: 'center',
-      color: colors.text,
-      opacity: 0.6,
+      marginHorizontal: 12,
       fontSize: 12,
-    },
-    socialButtonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginBottom: 10, // Increased margin
+      color: colors.description
     },
     socialButton: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: colors.background,
-      borderColor: colors.text,
       borderWidth: 1,
+      borderColor: '#CFD8DC',
       borderRadius: 8,
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      width: '48%',
+      height: 44,
+      marginBottom: 16
     },
     socialButtonText: {
       marginLeft: 8,
       fontSize: 14,
       color: colors.text,
+      fontWeight: '500'
     },
-    link: {
-      color: colors.primary,
-      textAlign: 'center',
-      marginTop: 10, // Increased margin
+    signInText: {
       fontSize: 14,
+      textAlign: 'center',
+      color: colors.description,
+      marginBottom: 16
     },
-  });
+    signInLink: {
+      color: colors.button,
+      fontWeight: '600'
+    }
+  })

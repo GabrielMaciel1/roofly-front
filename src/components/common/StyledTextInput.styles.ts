@@ -4,12 +4,13 @@ import { lightColors, darkColors } from '../../theme/colors';
 export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
     container: {
-      marginBottom: 16,
+      marginBottom: 10,
     },
     label: {
       color: colors.text,
       fontSize: 14,
-      marginBottom: 8,
+      marginBottom: 4,
+      paddingLeft: 12,
     },
     inputWrapper: {
       flexDirection: 'row',
