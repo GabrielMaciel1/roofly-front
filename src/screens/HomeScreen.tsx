@@ -8,7 +8,8 @@ import {
   StatusBar,
   SafeAreaView,
   ActivityIndicator,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -18,6 +19,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
 import ListingCard, { Listing } from '../components/ListingCard';
 import NoListingsFound from '../components/NoListingsFound';
+import * as Location from 'expo-location';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -27,36 +29,76 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createHomeStyles(colors);
 
-  const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
+
+  const [popularListings, setPopularListings] = useState<Listing[]>([]);
+  const [nearbyListings, setNearbyListings] = useState<Listing[]>([]);
 
   const transformListingData = (data: any[]): Listing[] =>
     data.map(item => ({
       id: item.id,
-      title: item.titulo,
-      location: `${item.endereco.cidade}, ${item.endereco.estado}`,
-      price: `R$${item.preco.toLocaleString('pt-BR')}`,
-      period: item.tipo === 'Aluguel' ? '/mês' : '',
-      rating: 4.5,
-      image: item.fotos[0],
-      type: item.imovelType === 'Casa' ? 'House' : 'Apartment',
+      title: item.title,
+      location: item.address,
+      price: `R${item.price.toLocaleString('pt-BR')}`,
+      period: item.transactionType === 'Aluguel' ? '/mês' : '',
+      rating: 4.5, // Placeholder for now
+      image: item.photos && item.photos.length > 0 ? { uri: `data:image/jpeg;base64,${item.photos[0].data}` } : require('../../assets/casa.jpg'),
+      type: item.propertyType === 'Casa' ? 'House' : 'Apartment',
     }));
 
+  
+
   useEffect(() => {
-    const fetchListings = async () => {
+    const fetchPopularListings = async () => {
       try {
-        const response = await api.get('/api/listings');
+        const response = await api.get('/api/advertisements/popular');
         if (response.status === 200 && Array.isArray(response.data)) {
-          setListings(transformListingData(response.data));
+          setPopularListings(transformListingData(response.data));
         }
       } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+        console.error('Error fetching popular listings:', err);
       }
     };
-    fetchListings();
+
+    const fetchNearbyListings = async (lat: number, lon: number) => {
+      try {
+        const response = await api.get(`/api/advertisements/near-you?latitude=${lat}&longitude=${lon}`);
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setNearbyListings(transformListingData(response.data));
+        }
+      } catch (err) {
+        console.error('Error fetching nearby listings:', err);
+      }
+    };
+
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLocationErrorMsg('Permission to access location was denied');
+        setLoading(false);
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      await fetchNearbyListings(currentLocation.coords.latitude, currentLocation.coords.longitude);
+      await fetchPopularListings();
+      setLoading(false);
+    })();
   }, []);
+
+  const handleListingPress = async (listingId: string) => {
+    try {
+      await api.post(`/api/advertisements/${listingId}/view`);
+      navigation.navigate('PropertyDetails', { propertyId: listingId });
+    } catch (error) {
+      console.error('Error incrementing view count:', error);
+      Alert.alert('Erro', 'Não foi possível registrar a visualização.');
+      navigation.navigate('PropertyDetails', { propertyId: listingId }); // Navigate anyway
+    }
+  };
 
   if (loading) {
     return (
@@ -65,9 +107,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </View>
     );
   }
-
-  const popularListings = listings.slice(0, 3);
-  const nearbyListings = listings.slice(3, 6);
 
   const categories = [
     { name: 'Casa', icon: 'home' as const },
@@ -146,7 +185,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 <ListingCard
                   key={listing.id}
                   listing={listing}
-                  onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                  onPress={() => handleListingPress(listing.id)}
                   style={{ marginRight: 16 }}
                 />
               ))}
@@ -168,13 +207,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
-          {nearbyListings.length > 0 ? (
+          {locationErrorMsg ? (
+            <NoListingsFound
+              imageSource={require('../../assets/icon_empty_location_sleep.png')}
+              mainMessage="Não foi possível obter sua localização."
+              subMessage={locationErrorMsg}
+              imageSize={120}
+            />
+          ) : nearbyListings.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
               {nearbyListings.map(listing => (
                 <ListingCard
                   key={listing.id}
                   listing={listing}
-                  onPress={() => navigation.navigate('PropertyDetails', { propertyId: listing.id })}
+                  onPress={() => handleListingPress(listing.id)}
                   style={{ marginRight: 16 }}
                 />
               ))}

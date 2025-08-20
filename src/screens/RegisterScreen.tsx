@@ -66,20 +66,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     }
     setLoading(true)
     try {
-      const form = new FormData()
-      form.append('name', data.fullName)
-      form.append('email', data.email)
-      form.append('password', data.password)
-      form.append('phone', data.phone)
-      if (avatarUri) {
-        form.append('avatar', {
-          uri: avatarUri,
-          name: 'avatar.jpg',
-          type: 'image/jpeg'
-        } as any)
-      }
-      const response = await api.post('/api/auth/register', form, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const response = await api.post('/api/auth/register', {
+        fullName: data.fullName,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+      }, {
+        headers: { 'Content-Type': 'application/json' }
       })
       if (response.data.success) {
         Alert.alert('Sucesso', 'Cadastro realizado com sucesso!')

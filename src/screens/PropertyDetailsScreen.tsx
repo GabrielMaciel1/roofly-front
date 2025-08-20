@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -11,9 +11,45 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PropertyDetails'>;
 
 const PropertyDetailsScreen: React.FC<Props> = ({ route }) => {
   const { propertyId } = route.params;
-  const property = api.find(p => p.id === propertyId);
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const colors = useTheme();
   const styles = createStyles(colors);
+
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/properties/${propertyId}`);
+        setProperty(response.data);
+      } catch (err) {
+        console.error('Erro ao buscar propriedade:', err);
+        setError('Não foi possível carregar os detalhes do imóvel.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [propertyId]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Carregando...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   if (!property) {
     return (
