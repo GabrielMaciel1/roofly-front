@@ -6,12 +6,11 @@ export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
     inputWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: 60, // Increased height
-      borderWidth: 1,
-      borderColor: colors.border,
+      height: 70, // Increased height
       borderRadius: 10,
       paddingHorizontal: 15,
       backgroundColor: '#f5f4f8',
+      marginBottom: 15,
     },
     icon: {
       marginRight: 10,

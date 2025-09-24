@@ -56,7 +56,6 @@ export const useHomeScreen = (navigation: NativeStackNavigationProp<RootStackPar
   const { mutate: incrementView } = useMutation({
     mutationFn: incrementViewCount,
     onError: (error) => {
-      console.error('Error incrementing view count:', error);
       Alert.alert('Erro', 'Não foi possível registrar a visualização.');
     },
   });

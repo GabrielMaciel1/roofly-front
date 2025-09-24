@@ -1,4 +1,4 @@
-// RegisterScreen.tsx
+
 import React, { useState } from 'react'
 import {
   ScrollView,
@@ -30,61 +30,35 @@ type RegisterFormData = {
   fullName: string
   email: string
   password: string
-  confirmPassword: string
-  phone: string
 }
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const { login } = useAuthStore();
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
-    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '', phone: '' }
+    defaultValues: { fullName: '', email: '', password: '' }
   })
-  const [avatarUri, setAvatarUri] = useState<string | null>(null)
-  const [agreeToTerms, setAgreeToTerms] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const colors = useTheme()
   const styles = createRegisterStyles(colors)
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.7,
-      allowsEditing: true,
-      aspect: [1, 1]
-    })
-    if (!result.cancelled) {
-      setAvatarUri(result.uri)
-    }
-  }
-
   const handleRegister = async (data: RegisterFormData) => {
-    if (data.password !== data.confirmPassword) {
-      Alert.alert('Erro', 'As senhas não coincidem.')
-      return
-    }
-    if (!agreeToTerms) {
-      Alert.alert('Erro', 'Você deve concordar com os Termos de Serviço e a Política de Privacidade.')
-      return
-    }
     setLoading(true)
     try {
       const response = await api.post('/api/auth/register', {
         fullName: data.fullName,
         email: data.email,
         password: data.password,
-        phone: data.phone,
       }, {
         headers: { 'Content-Type': 'application/json' }
       })
-      if (response.status === 201 && response.data) {
-        const { user, token } = response.data;
-        login(user, token);
-        navigation.replace('Home');
+      if (response.status === 200 && response.data) { // Alterado para 200, pois não criará o usuário ainda, apenas enviará o OTP
+        navigation.navigate('OtpVerification', { email: data.email }); // Navegar para a tela de OTP
       } else {
-        Alert.alert('Erro', response.data.message || 'Erro ao cadastrar usuário.')
+        Alert.alert('Erro', response.data.message || 'Erro ao solicitar OTP.')
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Erro ao cadastrar usuário. Verifique sua conexão.'
+      const msg = err.response?.data?.message || 'Erro ao solicitar OTP. Verifique sua conexão.'
       Alert.alert('Erro', msg)
     } finally {
       setLoading(false)
@@ -93,17 +67,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={pickImage} style={styles.avatarContainer}>
-        {avatarUri
-          ? <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
-          : <>
-              <Ionicons name="cloud-upload-outline" style={styles.avatarIcon} />
-              <Text style={styles.uploadText}>Upload Photo</Text>
-            </>
-        }
-        
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={20} color={colors.text} />
       </TouchableOpacity>
-      <Text style={styles.title}>Create your account</Text>
+
+      <Text style={styles.title}>
+        Crie sua <Text style={styles.titleColored}>conta</Text>
+      </Text>
+      <Text style={styles.subtitle}>Preencha os campos abaixo para criar sua conta.</Text>
 
       <Controller
         control={control}
@@ -111,8 +82,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         rules={{ required: 'Nome completo é obrigatório.' }}
         render={({ field: { onChange, onBlur, value } }) => (
           <StyledTextInput
-            label="Nome Completo"
-            placeholder="John Doe"
+            iconName="account"
+            placeholder="Nome Completo"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value} 
@@ -130,8 +101,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <StyledTextInput
-            label="Email"
-            placeholder="example@youremail.com"
+            iconName="email-outline"
+            placeholder="E-mail"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -151,8 +122,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <StyledTextInput
-            label="Senha"
-            placeholder="••••••••"
+            iconName="lock"
+            placeholder="Senha"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -162,55 +133,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       />
       {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-      <Controller
-        control={control}
-        name="confirmPassword"
-        rules={{ required: 'Confirmação é obrigatória.' }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <StyledTextInput
-            label="Confirmar Senha"
-            placeholder="••••••••"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            isPassword
-          />
-        )}
-      />
-      {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message}</Text>}
-
-      <Controller
-        control={control}
-        name="phone"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <StyledTextInput
-            label="Telefone"
-            placeholder="+55 (11) 91234-5678"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            keyboardType="phone-pad"
-          />
-        )}
-      />
-      {errors.phone && <Text style={styles.error}>{errors.phone.message}</Text>}
-
-      <View style={styles.termsContainer}>
-        <Checkbox
-          value={agreeToTerms}
-          onValueChange={setAgreeToTerms}
-          color={agreeToTerms ? colors.button : undefined}
-        />
-        <Text style={styles.termsText}>
-          I agree to the{' '}
-          <Text style={styles.link} onPress={() => Linking.openURL('https://example.com/terms')}>
-            Terms of Service
-          </Text>{' '}
-          and{' '}
-          <Text style={styles.link} onPress={() => Linking.openURL('https://example.com/privacy')}>
-            Privacy Policy
-          </Text>.
-        </Text>
+      <View style={styles.termsAndShowPasswordContainer}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://example.com/terms')}>
+          <Text style={styles.termsText}>Termos de Serviço</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Text style={styles.showPasswordText}>
+            {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity
@@ -220,28 +151,28 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       >
         {loading
           ? <ActivityIndicator color={colors.card} />
-          : <Text style={styles.buttonText}>Create Account</Text>
+          : <Text style={styles.buttonText}>Registrar</Text>
         }
       </TouchableOpacity>
 
       <View style={styles.separatorContainer}>
         <View style={styles.separatorLine} />
-        <Text style={styles.separatorText}>or continue with</Text>
+        <Text style={styles.separatorText}>ou continuar com</Text>
         <View style={styles.separatorLine} />
       </View>
 
-      <TouchableOpacity style={styles.socialButton}>
-        <Ionicons name="logo-facebook" size={20} color="#1877F2" />
-        <Text style={styles.socialButtonText}>Continue with Facebook</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.socialButton}>
-        <Ionicons name="logo-google" size={20} color="#DB4437" />
-        <Text style={styles.socialButtonText}>Continue with Google</Text>
-      </TouchableOpacity>
+      <View style={styles.socialLoginContainer}> {/* Usar o mesmo container da tela de login */}
+        <TouchableOpacity style={styles.socialButton}>
+          <Image source={require('../../assets/Google-logo.png')} style={styles.socialIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.socialButton, styles.socialButtonMargin]}>
+          <Image source={require('../../assets/Facebook - normal.png')} style={styles.socialIcon} />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.signInText}>
-          Already have an account? <Text style={styles.signInLink}>Sign in</Text>
+          Já tem uma conta? <Text style={styles.signInLink}>Entrar</Text>
         </Text>
       </TouchableOpacity>
     </ScrollView>

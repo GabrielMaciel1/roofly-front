@@ -1,4 +1,4 @@
-// RegisterScreen.styles.ts
+
 import { StyleSheet } from 'react-native'
 import { lightColors, darkColors } from '../theme/colors'
 
@@ -9,57 +9,56 @@ export const createRegisterStyles = (colors: typeof lightColors | typeof darkCol
       backgroundColor: colors.background
     },
     container: {
-      paddingTop: 64,
-      paddingHorizontal: 24
+      flex: 1,
+      paddingHorizontal: 24,
+      paddingTop: 24,
     },
-    avatarContainer: {
-      width: 130,
-      height: 130,
-      borderRadius: 65,
-      backgroundColor: '#ECEFF1',
+    backButton: {
+      position: 'absolute',
+      top: 50,
+      left: 24,
+      zIndex: 1,
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: '#f5f4f8',
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center',
-      marginBottom: 24,
-      borderWidth: 1,
-      borderColor: colors.border,
-      
-    },
-    avatarImage: {
-      width: 110,
-      height: 110,
-      borderRadius: 55
-    },
-    avatarIcon: {
-      color: colors.button,
-      fontSize: 60
-    },
-    uploadText: {
-      color: colors.button,
-      fontSize: 14,
-      marginTop: 4
-    },
-    editIconContainer: {
-      position: 'absolute',
-      bottom: -25,
-      right: -25,
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      backgroundColor: colors.button,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    editIcon: {
-      color: colors.card,
-      fontSize: 18
     },
     title: {
-      fontSize: 24,
-      fontWeight: '700',
-      textAlign: 'center',
-      marginBottom: 24,
+      fontSize: 28,
+      fontWeight: 'normal',
+      textAlign: 'left',
+      marginTop: 140,
+      marginBottom: 5,
       color: colors.title
+    },
+    titleColored: {
+      color: colors.button,
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      fontSize: 16,
+      textAlign: 'left',
+      color: colors.description,
+      marginBottom: 40,
+    },
+    termsAndShowPasswordContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginBottom: 30,
+      marginTop: 10,
+    },
+    termsText: {
+      fontSize: 14,
+      color: colors.button,
+      fontWeight: 'bold',
+    },
+    showPasswordText: {
+      fontSize: 14,
+      color: colors.button,
+      fontWeight: 'bold',
     },
     inputField: {
       marginBottom: 16
@@ -93,55 +92,60 @@ export const createRegisterStyles = (colors: typeof lightColors | typeof darkCol
     },
     button: {
       backgroundColor: colors.button,
-      height: 48,
-      borderRadius: 8,
+      height: 55,
+      borderRadius: 10,
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 32
+      marginBottom: 8,
     },
     buttonDisabled: {
       opacity: 0.6
     },
     buttonText: {
       color: colors.card,
-      fontSize: 16,
-      fontWeight: '600'
+      fontSize: 18,
+      fontWeight: 'bold',
     },
     separatorContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 24
+      marginVertical: 30,
     },
     separatorLine: {
       flex: 1,
       height: 1,
-      backgroundColor: '#CFD8DC'
+      backgroundColor: colors.border,
     },
     separatorText: {
-      marginHorizontal: 12,
-      fontSize: 12,
+      marginHorizontal: 10,
       color: colors.description
     },
+    socialLoginContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 30,
+    },
     socialButton: {
+      width: 158,
+      height: 70,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: '#CFD8DC',
-      borderRadius: 8,
-      height: 44,
-      marginBottom: 16
+      borderRadius: 20,
+      backgroundColor: '#f5f4f8',
     },
-    socialButtonText: {
-      marginLeft: 8,
-      fontSize: 14,
-      color: colors.text,
-      fontWeight: '500'
+    socialButtonMargin: {
+      marginLeft: 10,
+    },
+    socialIcon: {
+      width: 24,
+      height: 24,
     },
     signInText: {
       fontSize: 14,
       textAlign: 'center',
       color: colors.description,
+      marginTop: 20,
       marginBottom: 16
     },
     signInLink: {

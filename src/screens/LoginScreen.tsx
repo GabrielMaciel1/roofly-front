@@ -50,7 +50,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         Alert.alert('Erro', errorMessage);
       }
     } catch (error: any) {
-      console.error(error);
       let errorMessage;
       if (error?.response?.data?.message) {
         errorMessage = error.response.data.message;

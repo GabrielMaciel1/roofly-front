@@ -5,6 +5,7 @@ import { RootStackParamList, TabParamList, CreateListingStackParamList } from '.
 import CarouselScreen from '../screens/CarouselScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import OtpVerificationScreen from '../screens/OtpVerificationScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -19,7 +20,7 @@ import Messages from '../screens/Messages';
 import FilterScreen from '../screens/FilterScreen';
 import MessageDetailsScreen from '../screens/MessageDetailsScreen';
 import SearchListScreen from '../screens/SearchListScreen';
-import { useTheme } from '../contexts/ThemeContext'; // This was commented out, but should be active now
+import { useTheme } from '../contexts/ThemeContext';
 
 import CreateListingScreen from '../screens/CreateListingScreen';
 import SelectCategoryScreen from '../screens/SelectCategoryScreen';
@@ -47,7 +48,7 @@ function CreateListingStackScreen() {
 }
 
 function HomeTabs() {
-  const colors = useTheme(); // This was commented out, but should be active now
+  const colors = useTheme();
 
   return (
     <Tab.Navigator
@@ -134,9 +135,7 @@ function HomeTabs() {
         }}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
-            // Prevent default action
             e.preventDefault();
-            // Reset the stack to the first screen (SelectCategoryScreen)
             navigation.navigate('CreateListingTab', { screen: 'SelectCategory' });
           },
         })}
@@ -156,7 +155,7 @@ function HomeTabs() {
 }
 
 export default function AppNavigator({ initialRouteName = 'Carousel' }) {
-  const colors = useTheme(); // This was commented out, but should be active now
+  const colors = useTheme();
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -165,6 +164,7 @@ export default function AppNavigator({ initialRouteName = 'Carousel' }) {
       <Stack.Screen name="Carousel" component={CarouselScreen} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} options={{ headerShown: false, presentation: 'push' }} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: true, title: 'Recuperar Senha' }} />
       <Stack.Screen name="Home" component={HomeTabs} />
       <Stack.Screen name="PropertyDetails" component={PropertyDetailsScreen} options={{ headerShown: true, title: 'Detalhes do Imóvel' }} />

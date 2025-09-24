@@ -19,7 +19,7 @@ const StyledTextInput: React.FC<StyledTextInputProps> = ({ iconName, isPassword,
       <MaterialCommunityIcons name={iconName} size={22} color={colors.description} style={styles.icon} />
       <TextInput
         style={styles.input}
-        placeholderTextColor={colors.description} // Changed to colors.description for grey-balery medium
+        placeholderTextColor={colors.tabInactive} // Changed to a lighter color for placeholder
         secureTextEntry={isPassword && !showPassword}
         {...props}
       />

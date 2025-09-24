@@ -2,6 +2,7 @@ export type RootStackParamList = {
   Carousel: undefined;
   Login: undefined;
   Register: undefined;
+  OtpVerification: { email: string }; // Nova rota para verificação de OTP
   ForgotPassword: undefined;
   Home: undefined;
   PropertyDetails: { propertyId: string };

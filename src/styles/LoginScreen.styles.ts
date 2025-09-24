@@ -89,8 +89,6 @@ export const createLoginStyles = (colors: typeof lightColors | typeof darkColors
       justifyContent: 'center',
       borderRadius: 20, // Less rounded
       backgroundColor: '#f5f4f8',
-      borderColor: colors.border,
-      borderWidth: 1,
     },
     socialButtonMargin: {
       marginLeft: 10,
