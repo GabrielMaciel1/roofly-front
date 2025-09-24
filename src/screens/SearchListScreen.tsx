@@ -4,13 +4,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSearchScreen } from '../hooks/useSearchScreen';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { useThemeContext } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createSearchListStyles } from '../styles/SearchListScreen.styles';
 
 type SearchListScreenProps = NativeStackScreenProps<RootStackParamList, 'SearchList'>;
 
 const SearchListScreen: React.FC<SearchListScreenProps> = ({ navigation }) => {
-  const { colors } = useThemeContext();
+  const colors = useTheme();
   const styles = createSearchListStyles(colors);
   const {
     search,

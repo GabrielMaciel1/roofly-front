@@ -1,386 +1,228 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Switch, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../contexts/ThemeContext';
-import { createStyles } from './CreateListingScreen.styles';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../types';
+import React from 'react';
+import { View, Text, TextInput, Switch, ScrollView } from 'react-native';
 
-// Placeholder components - In a real app, these would be imported from a UI library or custom-built
-const ImagePicker = ({ max, onSelectImages }: { max: number, onSelectImages: (images: any[]) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TouchableOpacity style={styles.imagePickerButton} onPress={() => Alert.alert('ImagePicker', 'Simulando seleção de imagens')}>
-      <MaterialCommunityIcons name="camera-plus" size={40} color={colors.button} />
-      <Text style={[styles.imagePickerText, { color: colors.button }]}>Adicione de 1 até {max} imagens do imóvel.</Text>
-    </TouchableOpacity>
-  );
-};
-
-const RadioButtonGroup = ({ options, selectedValue, onValueChange }: { options: string[], selectedValue: string, onValueChange: (value: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View style={styles.radioGroupContainer}>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option}
-          style={[styles.radioButton, selectedValue === option && styles.radioButtonSelected]}
-          onPress={() => onValueChange(option)}
-        >
-          <Text style={[styles.radioButtonText, selectedValue === option && styles.radioButtonTextSelected]}>{option}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
-
-const Select = ({ placeholder, options, selectedValue, onValueChange }: { placeholder: string, options: string[], selectedValue: string, onValueChange: (value: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View style={styles.selectContainer}>
-      <Text style={styles.selectPlaceholder}>{placeholder}</Text>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option}
-          style={[styles.selectOption, selectedValue === option && styles.selectOptionSelected]}
-          onPress={() => onValueChange(option)}
-        >
-          <Text style={[styles.selectOptionText, selectedValue === option && styles.selectOptionTextSelected]}>{option}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
-
-const CurrencyInput = ({ placeholder, value, onChangeText }: { placeholder: string, value: string, onChangeText: (text: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor={colors.textSecondary}
-      keyboardType="numeric"
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
-
-const NumericInput = ({ placeholder, unit, value, onChangeText }: { placeholder: string, unit: string, value: string, onChangeText: (text: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TextInput
-      style={styles.input}
-      placeholder={`${placeholder} (${unit})`}
-      placeholderTextColor={colors.textSecondary}
-      keyboardType="numeric"
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
-
-const Stepper = ({ min, max, value, onValueChange }: { min: number, max: number, value: number, onValueChange: (value: number) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View style={styles.stepperContainer}>
-      <TouchableOpacity style={styles.stepperButton} onPress={() => onValueChange(Math.max(min, value - 1))}>
-        <Text style={styles.stepperButtonText}>-</Text>
-      </TouchableOpacity>
-      <Text style={styles.stepperValue}>{value}</Text>
-      <TouchableOpacity style={styles.stepperButton} onPress={() => onValueChange(Math.min(max, value + 1))}>
-        <Text style={styles.stepperButtonText}>+</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const AutoCompleteInput = ({ placeholder, mask, value, onChangeText }: { placeholder: string, mask: string, value: string, onChangeText: (text: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor={colors.textSecondary}
-      keyboardType="numeric"
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
-
-const TextArea = ({ placeholder, rows, value, onChangeText }: { placeholder: string, rows: number, value: string, onChangeText: (text: string) => void }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TextInput
-      style={[styles.input, { height: rows * 20 }]} // Approximate height based on rows
-      placeholder={placeholder}
-      placeholderTextColor={colors.textSecondary}
-      multiline
-      numberOfLines={rows}
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
-
-const Button = ({ title, onPress, variant }: { title: string, onPress: () => void, variant: string }) => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <TouchableOpacity style={[styles.button, variant === 'primary' && styles.primaryButton]} onPress={onPress}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
-
+import { useCreateListingScreen } from '../hooks/useCreateListingScreen';
+import { ImagePicker } from '../components/form/ImagePicker';
+import { RadioButtonGroup } from '../components/form/RadioButtonGroup';
+import { Select } from '../components/form/Select';
+import { CurrencyInput } from '../components/form/CurrencyInput';
+import { NumericInput } from '../components/form/NumericInput';
+import { Stepper } from '../components/form/Stepper';
+import { AutoCompleteInput } from '../components/form/AutoCompleteInput';
+import { TextArea } from '../components/form/TextArea';
+import { Button } from '../components/form/Button';
 
 const CreateListingScreen: React.FC = () => {
-  const colors = useTheme();
-  const styles = createStyles(colors);
-  const route = useRoute<CreateListingScreenRouteProp>();
-  const { selectedCategory } = route.params || {};
-
-  const [businessType, setBusinessType] = useState('Venda');
-  const [category, setCategory] = useState(selectedCategory || '');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [cep, setCep] = useState('');
-  const [streetNumber, setStreetNumber] = useState('');
-  const [area, setArea] = useState('');
-  const [bedrooms, setBedrooms] = useState(0);
-  const [suites, setSuites] = useState(0);
-  const [bathrooms, setBathrooms] = useState(0);
-  const [garageSpaces, setGarageSpaces] = useState(0);
-  const [condoFee, setCondoFee] = useState('');
-  const [iptu, setIptu] = useState('');
-  const [furnished, setFurnished] = useState(false);
-  const [petsAllowed, setPetsAllowed] = useState(false);
-  const [financingAccepted, setFinancingAccepted] = useState(false);
-  const [floor, setFloor] = useState('');
-  const [elevator, setElevator] = useState(false);
-  const [position, setPosition] = useState('');
-  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
-
-  const handleSubmit = () => {
-    Alert.alert('Anúncio Publicado', 'Seu anúncio foi enviado para revisão.');
-    // Lógica para enviar os dados do formulário
-  };
+  
+  const {
+    businessType, category, title, description, price, cep, streetNumber, area, bedrooms, suites, bathrooms, garageSpaces, condoFee, iptu, furnished, petsAllowed, financingAccepted, floor, elevator, position, showPhoneNumber, set, handleSubmit
+  } = useCreateListingScreen();
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Criar Novo Anúncio</Text>
+    <ScrollView className="flex-1 bg-white p-[16px]"> {/* container */}
+      <Text className="text-[24px] font-bold text-[#0F172A] mb-[24px] text-center">Criar Novo Anúncio</Text> {/* title */}
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Fotos</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Fotos</Text> {/* label */}
         <ImagePicker max={20} onSelectImages={() => {}} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Título</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Título</Text> {/* label */}
         <TextInput
-          style={styles.input}
+          className="bg-white text-[#0F172A] rounded-[8px] p-[12px] text-[16px] border border-[#E6EEF0]" // input
           placeholder="Ex: Apartamento com 3 quartos no centro"
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={colors.description} // textSecondary
           value={title}
-          onChangeText={setTitle}
+          onChangeText={(value) => set({ title: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Descrição/informações adicionais</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Descrição/informações adicionais</Text> {/* label */}
         <TextArea
           placeholder="Ex: Apartamento espaçoso com vista para o mar..."
           rows={5}
           value={description}
-          onChangeText={setDescription}
+          onChangeText={(value) => set({ description: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Tipo de negócio</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Tipo de negócio</Text> {/* label */}
         <RadioButtonGroup
           options={["Venda", "Aluguel", "Temporada"]}
           selectedValue={businessType}
-          onValueChange={setBusinessType}
+          onValueChange={(value) => set({ businessType: value as any })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Preço</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Preço</Text> {/* label */}
         <CurrencyInput
           placeholder="R$ 0,00"
           value={price}
-          onChangeText={setPrice}
+          onChangeText={(value) => set({ price: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>CEP</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">CEP</Text> {/* label */}
         <AutoCompleteInput
           placeholder="CEP"
           mask="99999-999"
           value={cep}
-          onChangeText={setCep}
+          onChangeText={(value) => set({ cep: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Rua e Número</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Rua e Número</Text> {/* label */}
         <TextInput
-          style={styles.input}
+          className="bg-white text-[#0F172A] rounded-[8px] p-[12px] text-[16px] border border-[#E6EEF0]" // input
           placeholder="Rua, número (opcional)"
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={colors.description} // textSecondary
           value={streetNumber}
-          onChangeText={setStreetNumber}
+          onChangeText={(value) => set({ streetNumber: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Área útil (m²)</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Área útil (m²)</Text> {/* label */}
         <NumericInput
           placeholder="Área útil"
           unit="m²"
           value={area}
-          onChangeText={setArea}
+          onChangeText={(value) => set({ area: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Quartos</Text>
-        <Stepper min={0} max={10} value={bedrooms} onValueChange={setBedrooms} />
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Quartos</Text> {/* label */}
+        <Stepper min={0} max={10} value={bedrooms} onValueChange={(value) => set({ bedrooms: value })} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Suítes</Text>
-        <Stepper min={0} max={10} value={suites} onValueChange={setSuites} />
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Suítes</Text> {/* label */}
+        <Stepper min={0} max={10} value={suites} onValueChange={(value) => set({ suites: value })} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Banheiros</Text>
-        <Stepper min={0} max={10} value={bathrooms} onValueChange={setBathrooms} />
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Banheiros</Text> {/* label */}
+        <Stepper min={0} max={10} value={bathrooms} onValueChange={(value) => set({ bathrooms: value })} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Vagas de garagem</Text>
-        <Stepper min={0} max={10} value={garageSpaces} onValueChange={setGarageSpaces} />
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Vagas de garagem</Text> {/* label */}
+        <Stepper min={0} max={10} value={garageSpaces} onValueChange={(value) => set({ garageSpaces: value })} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Condomínio (R$/mês)</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Condomínio (R$/mês)</Text> {/* label */}
         <CurrencyInput
           placeholder="Condomínio"
           value={condoFee}
-          onChangeText={setCondoFee}
+          onChangeText={(value) => set({ condoFee: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>IPTU (R$)</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">IPTU (R$)</Text> {/* label */}
         <CurrencyInput
           placeholder="IPTU"
           value={iptu}
-          onChangeText={setIptu}
+          onChangeText={(value) => set({ iptu: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.switchContainer}>
-          <Text style={styles.label}>Mobiliado</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <View className="flex-row justify-between items-center bg-white rounded-[8px] border border-[#E6EEF0] p-[12px]"> {/* switchContainer */}
+          <Text className="text-[16px] font-bold text-[#0F172A]">Mobiliado</Text> {/* label */}
           <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={furnished ? colors.button : colors.card}
+            trackColor={{ false: colors.border, true: colors.primary.medium }}
+            thumbColor={furnished ? colors.primary.medium : colors.card}
             ios_backgroundColor={colors.border}
-            onValueChange={setFurnished}
+            onValueChange={(value) => set({ furnished: value })}
             value={furnished}
           />
-        </Text>
+        </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.switchContainer}>
-          <Text style={styles.label}>Permitido animais</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <View className="flex-row justify-between items-center bg-white rounded-[8px] border border-[#E6EEF0] p-[12px]"> {/* switchContainer */}
+          <Text className="text-[16px] font-bold text-[#0F172A]">Permitido animais</Text> {/* label */}
           <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={petsAllowed ? colors.button : colors.card}
+            trackColor={{ false: colors.border, true: colors.primary.medium }}
+            thumbColor={petsAllowed ? colors.primary.medium : colors.card}
             ios_backgroundColor={colors.border}
-            onValueChange={setPetsAllowed}
+            onValueChange={(value) => set({ petsAllowed: value })}
             value={petsAllowed}
           />
-        </Text>
+        </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.switchContainer}>
-          <Text style={styles.label}>Aceita financiamento</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <View className="flex-row justify-between items-center bg-white rounded-[8px] border border-[#E6EEF0] p-[12px]"> {/* switchContainer */}
+          <Text className="text-[16px] font-bold text-[#0F172A]">Aceita financiamento</Text> {/* label */}
           <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={financingAccepted ? colors.button : colors.card}
+            trackColor={{ false: colors.border, true: colors.primary.medium }}
+            thumbColor={financingAccepted ? colors.primary.medium : colors.card}
             ios_backgroundColor={colors.border}
-            onValueChange={setFinancingAccepted}
+            onValueChange={(value) => set({ financingAccepted: value })}
             value={financingAccepted}
           />
-        </Text>
+        </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Andar / Pavimentos</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Andar / Pavimentos</Text> {/* label */}
         <TextInput
-          style={styles.input}
+          className="bg-white text-[#0F172A] rounded-[8px] p-[12px] text-[16px] border border-[#E6EEF0]" // input
           placeholder="Andar (ex: 5 de 12)"
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={colors.description} // textSecondary
           value={floor}
-          onChangeText={setFloor}
+          onChangeText={(value) => set({ floor: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.switchContainer}>
-          <Text style={styles.label}>Elevador</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <View className="flex-row justify-between items-center bg-white rounded-[8px] border border-[#E6EEF0] p-[12px]"> {/* switchContainer */}
+          <Text className="text-[16px] font-bold text-[#0F172A]">Elevador</Text> {/* label */}
           <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={elevator ? colors.button : colors.card}
+            trackColor={{ false: colors.border, true: colors.primary.medium }}
+            thumbColor={elevator ? colors.primary.medium : colors.card}
             ios_backgroundColor={colors.border}
-            onValueChange={setElevator}
+            onValueChange={(value) => set({ elevator: value })}
             value={elevator}
           />
-        </Text>
+        </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Posição (frente/fundos)</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <Text className="text-[16px] font-bold text-[#0F172A] mb-[8px]">Posição (frente/fundos)</Text> {/* label */}
         <Select
           placeholder="Selecione a posição"
           options={["Frente", "Fundos", "Lateral"]}
           selectedValue={position}
-          onValueChange={setPosition}
+          onValueChange={(value) => set({ position: value })}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.switchContainer}>
-          <Text style={styles.label}>Mostrar telefone</Text>
+      <View className="mb-[16px]"> {/* section */}
+        <View className="flex-row justify-between items-center bg-white rounded-[8px] border border-[#E6EEF0] p-[12px]"> {/* switchContainer */}
+          <Text className="text-[16px] font-bold text-[#0F172A]">Mostrar telefone</Text> {/* label */}
           <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={showPhoneNumber ? colors.button : colors.card}
+            trackColor={{ false: colors.border, true: colors.primary.medium }}
+            thumbColor={showPhoneNumber ? colors.primary.medium : colors.card}
             ios_backgroundColor={colors.border}
-            onValueChange={setShowPhoneNumber}
+            onValueChange={(value) => set({ showPhoneNumber: value })}
             value={showPhoneNumber}
           />
-        </Text>
+        </View>
       </View>
 
       <Button title="Publicar anúncio" onPress={handleSubmit} variant="primary" />
-      <View style={{ height: 50 }} />
+      <View className="h-[50px]" />
     </ScrollView>
   );
 };

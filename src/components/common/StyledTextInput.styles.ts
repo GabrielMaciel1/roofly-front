@@ -3,24 +3,18 @@ import { lightColors, darkColors } from '../../theme/colors';
 
 export const createStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
-    container: {
-      marginBottom: 10,
-    },
-    label: {
-      color: colors.text,
-      fontSize: 14,
-      marginBottom: 4,
-      paddingLeft: 12,
-    },
     inputWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: 50,
+      height: 60, // Increased height
       borderWidth: 1,
       borderColor: colors.border,
       borderRadius: 10,
       paddingHorizontal: 15,
-      backgroundColor: colors.background,
+      backgroundColor: '#f5f4f8',
+    },
+    icon: {
+      marginRight: 10,
     },
     input: {
       flex: 1,

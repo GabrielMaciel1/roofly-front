@@ -1,128 +1,118 @@
-import { StyleSheet } from 'react-native';
-import { lightColors, darkColors } from '../theme/colors';
+import { StyleSheet, Dimensions } from 'react-native';
+import { lightColors, darkColors } from '../../theme/colors';
+
+const { width } = Dimensions.get('window');
 
 export const createLoginStyles = (colors: typeof lightColors | typeof darkColors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-      paddingTop: 0,
-      backgroundColor: colors.background
-    },
-    logoContainer: {
-      alignItems: 'center',
-      marginBottom: 0,
-    },
-    logoCircle: {
-      width: 220,
-      height: 220,
       backgroundColor: colors.background,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
-    logoImage: {
-      width: '80%',
-      height: '80%',
+    headerImage: {
+      width: '100%',
+      height: 150,
+      resizeMode: 'cover',
+      marginTop: 30,
     },
-    signUpTitle: {
-      color: colors.text,
-      fontSize: 16,
-      textAlign: 'center',
-      marginBottom: 16,
+    contentContainer: {
+      flex: 1,
+      padding: 25,
+      justifyContent: 'space-between',
     },
-    inputContainer: {
-      marginBottom: 16,
-    },
-    label: {
-      color: colors.text,
-      fontSize: 14,
+    
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: colors.title,
       marginBottom: 10,
-      marginLeft: 15,
     },
-    input: {
-      height: 50,
-      borderWidth: 1,
-      borderColor: colors.dot,
-      borderRadius: 50,
-      paddingHorizontal: 15,
-      marginBottom: 15,
-      backgroundColor: colors.card,
-      color: colors.text,
+    titleColored: {
+      color: colors.button,
     },
-    rememberMeRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 8,
-    },
-    checkbox: {
-      marginRight: 8,
-    },
-    rememberMeText: {
-      color: colors.text,
-      fontSize: 14,
-    },
-    forgotPasswordText: {
-      color: colors.secondary,
+    subtitle: {
       fontSize: 16,
-      marginTop: 10,
-      marginBottom: 15,
-      textAlign: 'center',
-      fontWeight: 'bold',
-    },
-    button: {
-      backgroundColor: colors.button,
-      height: 50,
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 15,
-    },
-    buttonText: {
-      color: colors.buttonText,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    orText: {
       color: colors.description,
-      textAlign: 'center',
-      marginVertical: 12,
+      marginBottom: 30,
     },
-    socialRow: {
+    forgotPasswordContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 16,
+      marginBottom: 30,
+    },
+    forgotPasswordText: {
+      fontSize: 14,
+      color: colors.button,
+      fontWeight: 'bold',
+    },
+    showPasswordText: {
+        fontSize: 14,
+        color: colors.button,
+        fontWeight: 'bold',
+    },
+    loginButton: {
+      backgroundColor: colors.button,
+      height: 55,
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    loginButtonText: {
+      color: colors.buttonText,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    separatorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 20,
+    },
+    separatorLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    separatorText: {
+      marginHorizontal: 10,
+      color: colors.description,
+    },
+    socialLoginContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     socialButton: {
+      width: 158, // Fixed width
+      height: 70, // Increased height
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: colors.card,
-      borderRadius: 8,
-      paddingVertical: 10,
-      paddingHorizontal: 18,
-      marginHorizontal: 4,
-      flex: 1,
       justifyContent: 'center',
+      borderRadius: 20, // Less rounded
+      backgroundColor: '#f5f4f8',
+      borderColor: colors.border,
+      borderWidth: 1,
     },
-    socialButtonText: {
-      color: colors.text,
-      fontSize: 15,
-      marginLeft: 8,
+    socialButtonMargin: {
+      marginLeft: 10,
     },
-    footerRow: {
+    socialIcon: {
+      width: 24,
+      height: 24,
+    },
+    registerContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 10,
+      marginTop: 20,
     },
-    footerText: {
-      color: colors.text,
+    registerText: {
       fontSize: 14,
+      color: colors.text,
     },
-    footerLink: {
+    registerLink: {
+      fontSize: 14,
       color: colors.button,
-      fontSize: 14,
-      marginLeft: 2,
-      textDecorationLine: 'underline',
+      fontWeight: 'bold',
+      marginLeft: 5,
     },
   });

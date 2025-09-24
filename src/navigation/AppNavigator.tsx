@@ -10,7 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PropertyDetailsScreen from '../screens/PropertyDetailsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ThemeSelectionScreen from '../screens/ThemeSelectionScreen';
+
 import { Ionicons } from '@expo/vector-icons';
 import SearchMapScreen from '../screens/SearchMapScreen';
 
@@ -19,7 +19,8 @@ import Messages from '../screens/Messages';
 import FilterScreen from '../screens/FilterScreen';
 import MessageDetailsScreen from '../screens/MessageDetailsScreen';
 import SearchListScreen from '../screens/SearchListScreen';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext'; // This was commented out, but should be active now
+
 import CreateListingScreen from '../screens/CreateListingScreen';
 import SelectCategoryScreen from '../screens/SelectCategoryScreen';
 
@@ -46,7 +47,7 @@ function CreateListingStackScreen() {
 }
 
 function HomeTabs() {
-  const colors = useTheme();
+  const colors = useTheme(); // This was commented out, but should be active now
 
   return (
     <Tab.Navigator
@@ -155,7 +156,7 @@ function HomeTabs() {
 }
 
 export default function AppNavigator({ initialRouteName = 'Carousel' }) {
-  const colors = useTheme();
+  const colors = useTheme(); // This was commented out, but should be active now
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -168,17 +169,7 @@ export default function AppNavigator({ initialRouteName = 'Carousel' }) {
       <Stack.Screen name="Home" component={HomeTabs} />
       <Stack.Screen name="PropertyDetails" component={PropertyDetailsScreen} options={{ headerShown: true, title: 'Detalhes do Imóvel' }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true, title: 'Configurações' }} />
-      <Stack.Screen 
-        name="ThemeSelection" 
-        component={ThemeSelectionScreen} 
-        options={{
-          headerShown: true,
-          title: 'Tema',
-          headerStyle: { backgroundColor: colors.background },
-          headerTintColor: colors.text,
-          headerBackTitleVisible: false,
-        }}
-      />
+      
       <Stack.Screen 
         name="Filter" 
         component={FilterScreen} 

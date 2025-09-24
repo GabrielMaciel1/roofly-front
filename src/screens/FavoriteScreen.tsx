@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Modal } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { api, anotherApi } from '../utils/api';
-import ListingCard, { Listing } from '../components/ListingCard';
+import ListingCard from '../components/ListingCard';
 import { useTheme } from '../contexts/ThemeContext';
 import { createFavoriteScreenStyles } from '../styles/FavoriteScreen.styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useFavoriteScreen } from '../hooks/useFavoriteScreen';
 
 type FavoriteScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Favorite'>;
@@ -15,37 +15,17 @@ type FavoriteScreenProps = {
 const FavoriteScreen: React.FC<FavoriteScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createFavoriteScreenStyles(colors);
-  const [activeFilter, setActiveFilter] = React.useState('All');
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedListingToRemove, setSelectedListingToRemove] = useState<Listing | null>(null);
-
-  const filters = ['All', 'House', 'Villa', 'Apartment'];
-
-  const [currentFavoritedListings, setCurrentFavoritedListings] = useState<Listing[]>(
-    [...(api || []), ...(anotherApi || [])].map(item => ({
-      id: item.id,
-      title: item.titulo,
-      location: `${item.endereco.cidade}, ${item.endereco.estado}`,
-      price: `R${item.preco.toLocaleString('pt-BR')}`,
-      period: item.tipo === 'Aluguel' ? '/mês' : '',
-      rating: 4.5,
-      image: item.fotos[0],
-      type: item.imovelType === 'Casa' ? 'House' : 'Apartment',
-    }))
-  );
-
-  const handleRemoveFavorite = () => {
-    if (selectedListingToRemove) {
-      setCurrentFavoritedListings(currentFavoritedListings.filter(item => item.id !== selectedListingToRemove.id));
-      setModalVisible(false);
-      setSelectedListingToRemove(null);
-    }
-  };
-
-  const openRemoveModal = (listing: Listing) => {
-    setSelectedListingToRemove(listing);
-    setModalVisible(true);
-  };
+  const {
+    activeFilter,
+    setActiveFilter,
+    isModalVisible,
+    selectedListingToRemove,
+    favorites,
+    filters,
+    handleRemoveFavorite,
+    openRemoveModal,
+    closeModal,
+  } = useFavoriteScreen();
 
   return (
     <View style={styles.highlightsContainer}>
@@ -77,8 +57,8 @@ const FavoriteScreen: React.FC<FavoriteScreenProps> = ({ navigation }) => {
 
       <View style={styles.listingListContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {currentFavoritedListings.length > 0 ? (
-            currentFavoritedListings.map(listing => (
+          {favorites.length > 0 ? (
+            favorites.map(listing => (
               <ListingCard
                   key={listing.id}
                   listing={listing}
@@ -99,7 +79,7 @@ const FavoriteScreen: React.FC<FavoriteScreenProps> = ({ navigation }) => {
         animationType="slide"
         transparent={true}
         visible={isModalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -114,7 +94,7 @@ const FavoriteScreen: React.FC<FavoriteScreenProps> = ({ navigation }) => {
             <View style={styles.modalButtonsContainer}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalCancelButton]}
-                onPress={() => setModalVisible(false)}
+                onPress={closeModal}
               >
                 <Text style={[styles.modalButtonText, styles.modalCancelButtonText]}>Cancel</Text>
               </TouchableOpacity>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { createProfileScreenStyles } from '../styles/ProfileScreen.styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from '../store/authStore';
 
 type ProfileScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Profile'>;
@@ -14,35 +14,18 @@ type ProfileScreenProps = {
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createProfileScreenStyles(colors);
-  const [userName, setUserName] = useState('Usuário');
-  const [userEmail, setUserEmail] = useState('usuario@example.com');
+  const { user, logout } = useAuthStore();
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const user = await AsyncStorage.getItem('user');
-        if (user) {
-          const userData = JSON.parse(user);
-          setUserName(userData.name || 'Usuário');
-          setUserEmail(userData.email || 'usuario@example.com');
-        }
-      } catch (error) {
-        console.error('Erro ao carregar dados do usuário:', error);
-      }
-    };
-    loadUserData();
-  }, []);
-
-  const handleLogout = async () => {
+  const handleLogout = () => {
     Alert.alert(
       'Sair',
       'Tem certeza que deseja sair?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        {
+        { 
           text: 'Sair',
-          onPress: async () => {
-            await AsyncStorage.removeItem('user');
+          onPress: () => {
+            logout();
             navigation.replace('Login');
           },
         },
@@ -55,36 +38,36 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image source={require('../../assets/perfil.jpeg')} style={styles.profileImage} />
-        <Text style={styles.userName}>{userName}</Text>
-        <Text style={styles.userEmail}>{userEmail}</Text>
+        <Text style={styles.userName}>{user?.name || 'Usuário'}</Text>
+        <Text style={styles.userEmail}>{user?.email || 'usuario@example.com'}</Text>
       </View>
 
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Saved')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Saved')}> 
           <MaterialCommunityIcons name="heart-outline" size={24} style={styles.menuIcon} />
           <Text style={styles.menuText}>Meus Favoritos</Text>
           <MaterialCommunityIcons name="chevron-right" size={24} style={styles.arrowIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Messages')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Messages')}> 
           <MaterialCommunityIcons name="chat-outline" size={24} style={styles.menuIcon} />
           <Text style={styles.menuText}>Minhas Mensagens</Text>
           <MaterialCommunityIcons name="chevron-right" size={24} style={styles.arrowIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ThemeSelection')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ThemeSelection')}> 
           <MaterialCommunityIcons name="theme-light-dark" size={24} style={styles.menuIcon} />
           <Text style={styles.menuText}>Tema</Text>
           <MaterialCommunityIcons name="chevron-right" size={24} style={styles.arrowIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Settings')}> 
           <MaterialCommunityIcons name="cog-outline" size={24} style={styles.menuIcon} />
           <Text style={styles.menuText}>Configurações</Text>
           <MaterialCommunityIcons name="chevron-right" size={24} style={styles.arrowIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}> 
           <MaterialCommunityIcons name="logout" size={24} style={styles.menuIcon} />
           <Text style={styles.menuText}>Sair</Text>
           <MaterialCommunityIcons name="chevron-right" size={24} style={styles.arrowIcon} />

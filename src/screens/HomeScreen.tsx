@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,17 +9,15 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Image,
-  Alert
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import api from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { createHomeStyles } from '../styles/HomeScreen.styles';
-import ListingCard, { Listing } from '../components/ListingCard';
+import ListingCard from '../components/ListingCard';
 import NoListingsFound from '../components/NoListingsFound';
-import * as Location from 'expo-location';
+import { useHomeScreen } from '../hooks/useHomeScreen';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -28,79 +26,9 @@ type HomeScreenProps = {
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createHomeStyles(colors);
+  const { locationErrorMsg, popularListings, nearbyListings, isLoading, handleListingPress } = useHomeScreen(navigation);
 
-  const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
-
-  const [popularListings, setPopularListings] = useState<Listing[]>([]);
-  const [nearbyListings, setNearbyListings] = useState<Listing[]>([]);
-
-  const transformListingData = (data: any[]): Listing[] =>
-    data.map(item => ({
-      id: item.id,
-      title: item.title,
-      location: item.address,
-      price: `R${item.price.toLocaleString('pt-BR')}`,
-      period: item.transactionType === 'Aluguel' ? '/mês' : '',
-      rating: 4.5, // Placeholder for now
-      image: item.photos && item.photos.length > 0 ? { uri: `data:image/jpeg;base64,${item.photos[0].data}` } : require('../../assets/casa.jpg'),
-      type: item.propertyType === 'Casa' ? 'House' : 'Apartment',
-    }));
-
-  
-
-  useEffect(() => {
-    const fetchPopularListings = async () => {
-      try {
-        const response = await api.get('/api/advertisements/popular');
-        if (response.status === 200 && Array.isArray(response.data)) {
-          setPopularListings(transformListingData(response.data));
-        }
-      } catch (err) {
-        console.error('Error fetching popular listings:', err);
-      }
-    };
-
-    const fetchNearbyListings = async (lat: number, lon: number) => {
-      try {
-        const response = await api.get(`/api/advertisements/near-you?latitude=${lat}&longitude=${lon}`);
-        if (response.status === 200 && Array.isArray(response.data)) {
-          setNearbyListings(transformListingData(response.data));
-        }
-      } catch (err) {
-        console.error('Error fetching nearby listings:', err);
-      }
-    };
-
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setLocationErrorMsg('Permission to access location was denied');
-        setLoading(false);
-        return;
-      }
-
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      setLocation(currentLocation);
-      await fetchNearbyListings(currentLocation.coords.latitude, currentLocation.coords.longitude);
-      await fetchPopularListings();
-      setLoading(false);
-    })();
-  }, []);
-
-  const handleListingPress = async (listingId: string) => {
-    try {
-      await api.post(`/api/advertisements/${listingId}/view`);
-      navigation.navigate('PropertyDetails', { propertyId: listingId });
-    } catch (error) {
-      console.error('Error incrementing view count:', error);
-      Alert.alert('Erro', 'Não foi possível registrar a visualização.');
-      navigation.navigate('PropertyDetails', { propertyId: listingId }); // Navigate anyway
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color={colors.button} />
@@ -179,7 +107,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
           </View>
-          {popularListings.length > 0 ? (
+          {popularListings && popularListings.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
               {popularListings.map(listing => (
                 <ListingCard
@@ -214,7 +142,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               subMessage={locationErrorMsg}
               imageSize={120}
             />
-          ) : nearbyListings.length > 0 ? (
+          ) : nearbyListings && nearbyListings.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.listingsList}>
               {nearbyListings.map(listing => (
                 <ListingCard

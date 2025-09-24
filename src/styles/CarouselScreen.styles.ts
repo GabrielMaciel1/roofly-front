@@ -79,4 +79,4 @@ export const createCarouselStyles = (colors: typeof lightColors | typeof darkCol
       fontSize: 16,
       fontWeight: 'bold',
     },
-  }); 
+  });

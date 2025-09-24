@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import RangeSlider from '@react-native-community/slider';
-import { useThemeContext } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { createFilterStyles } from '../styles/FilterScreen.styles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
+import { useFilterStore } from '../store/filterStore';
 
 type FilterScreenProps = NativeStackScreenProps<RootStackParamList, 'Filter'>;
 
 const FilterScreen: React.FC<FilterScreenProps> = ({ navigation }) => {
-  const { colors } = useThemeContext();
+  const colors = useTheme();
   const styles = createFilterStyles(colors);
-  const [buyOrSell, setBuyOrSell] = useState('buy');
-  const [propertyType, setPropertyType] = useState('apartment');
-  const [priceRange, setPriceRange] = useState([400, 3400]);
+  const { buyOrSell, setBuyOrSell, propertyType, setPropertyType, priceRange, setPriceRange } = useFilterStore();
 
   return (
     <View style={styles.container}>

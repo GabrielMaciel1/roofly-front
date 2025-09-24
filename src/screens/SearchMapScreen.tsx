@@ -6,14 +6,14 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
 import { useSearchScreen } from '../hooks/useSearchScreen'
 import ListingCard from '../components/ListingCard'
 import { createSearchMapStyles } from '../styles/SearchMapScreen.styles'
-import { useThemeContext } from '../contexts/ThemeContext'
+import { useTheme } from '../contexts/ThemeContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
 
 type SearchMapScreenProps = NativeStackScreenProps<RootStackParamList, 'Search'>
 
 const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
-  const { colors, theme } = useThemeContext()
+  const colors = useTheme()
   const styles = createSearchMapStyles(colors)
   const { location, region, setRegion, nearbyListings, bottomSheetRef } = useSearchScreen()
   const featuredListing = nearbyListings.length > 0 ? nearbyListings[0] : null
@@ -22,11 +22,9 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <MapView
-        key={theme}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1, paddingBottom: 70 }}
         region={region}
-        customMapStyle={colors.theme === 'dark' ? JSON.stringify(styles.mapDarkStyle) : []}
         showsUserLocation
         onRegionChangeComplete={setRegion}
       >
@@ -88,7 +86,7 @@ const SearchMapScreen: React.FC<SearchMapScreenProps> = ({ navigation }) => {
                 id: featuredListing.id,
                 title: featuredListing.titulo,
                 location: `${featuredListing.endereco.cidade}, ${featuredListing.endereco.estado}`,
-                price: `${featuredListing.preco.toLocaleString('en-US')}`,
+                price: `${featuredListing.endereco.preco.toLocaleString('en-US')}`,
                 period: '/ month',
                 rating: 4.5,
                 image: featuredListing.fotos[0],

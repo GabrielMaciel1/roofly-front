@@ -20,6 +20,7 @@ import api from '../utils/api'
 import { useTheme } from '../contexts/ThemeContext'
 import { createRegisterStyles } from '../styles/RegisterScreen.styles'
 import StyledTextInput from '../components/common/StyledTextInput'
+import { useAuthStore } from '../store/authStore';
 
 type RegisterScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>
@@ -34,6 +35,7 @@ type RegisterFormData = {
 }
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const { login } = useAuthStore();
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
     defaultValues: { fullName: '', email: '', password: '', confirmPassword: '', phone: '' }
   })
@@ -74,9 +76,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       }, {
         headers: { 'Content-Type': 'application/json' }
       })
-      if (response.data.success) {
-        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!')
-        navigation.navigate('Login')
+      if (response.status === 201 && response.data) {
+        const { user, token } = response.data;
+        login(user, token);
+        navigation.replace('Home');
       } else {
         Alert.alert('Erro', response.data.message || 'Erro ao cadastrar usuário.')
       }

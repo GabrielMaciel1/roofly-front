@@ -1,52 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { createStyles } from '../styles/PropertyDetailsScreen.styles';
 import { api } from '../utils/api';
 import MapView, { Marker } from 'react-native-maps';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PropertyDetails'>;
 
+const fetchPropertyDetails = async (propertyId: string) => {
+  const { data } = await api.get(`/properties/${propertyId}`);
+  return data;
+};
+
 const PropertyDetailsScreen: React.FC<Props> = ({ route }) => {
   const { propertyId } = route.params;
-  const [property, setProperty] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const colors = useTheme();
   const styles = createStyles(colors);
 
-  useEffect(() => {
-    const fetchProperty = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(`/properties/${propertyId}`);
-        setProperty(response.data);
-      } catch (err) {
-        console.error('Erro ao buscar propriedade:', err);
-        setError('Não foi possível carregar os detalhes do imóvel.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: property, isLoading, isError, error } = useQuery({
+    queryKey: ['propertyDetails', propertyId],
+    queryFn: () => fetchPropertyDetails(propertyId),
+  });
 
-    fetchProperty();
-  }, [propertyId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Carregando...</Text>
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.button} />
       </View>
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>{error?.message || 'Não foi possível carregar os detalhes do imóvel.'}</Text>
       </View>
     );
   }
