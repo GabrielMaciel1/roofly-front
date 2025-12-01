@@ -18,6 +18,7 @@ import { createHomeStyles } from '../styles/HomeScreen.styles';
 import ListingCard from '../components/ListingCard';
 import NoListingsFound from '../components/NoListingsFound';
 import { useHomeScreen } from '../hooks/useHomeScreen';
+import { useState } from 'react';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -27,6 +28,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const colors = useTheme();
   const styles = createHomeStyles(colors);
   const { locationErrorMsg, popularListings, nearbyListings, isLoading, handleListingPress } = useHomeScreen(navigation);
+  const [hasNotification, setHasNotification] = useState(true); // Placeholder for notification state
 
   if (isLoading) {
     return (
@@ -37,20 +39,28 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }
 
   const categories = [
-    { name: 'Casa', icon: 'home' as const },
-    { name: 'Apartamento', icon: 'office-building' as const },
+    { name: 'All', icon: 'apps' as const },
+    { name: 'House', icon: 'home' as const },
+    { name: 'Apartment', icon: 'office-building' as const },
     { name: 'Villa', icon: 'home-city' as const },
-    { name: 'Temporada', icon: 'beach' as const },
-    { name: 'Sítio', icon: 'tree' as const },
-    { name: 'Comercial', icon: 'domain' as const },
   ];
 
-  const renderCategoryItem = (category: typeof categories[0]) => (
-    <TouchableOpacity key={category.name} style={styles.categoryButton}>
-      <View style={styles.categoryIconContainer}>
-        <MaterialCommunityIcons name={category.icon} size={24} color={colors.button} />
-      </View>
-      <Text style={styles.categoryText}>{category.name}</Text>
+  const renderCategoryItem = (category: typeof categories[0], index: number) => (
+    <TouchableOpacity
+      key={category.name}
+      style={[
+        styles.categoryButton,
+        index === 0 && { backgroundColor: colors.button, borderColor: colors.button },
+      ]}
+    >
+      <Text
+        style={[
+          styles.categoryText,
+          index === 0 && { color: colors.card },
+        ]}
+      >
+        {category.name}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -62,36 +72,38 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <View style={styles.locationContainer}>
-            <Text style={styles.locationLabel}>Location</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="map-marker" size={20} color={colors.button} style={{ marginRight: 4 }} />
-              <Text style={styles.locationText}>Surabaya, Indonesia</Text>
-              <MaterialCommunityIcons name="chevron-down" size={20} color={colors.text} style={{ marginLeft: 4 }} />
-            </View>
-          </View>
+          <TouchableOpacity style={styles.locationContainer}>
+            <MaterialCommunityIcons name="map-marker" size={20} color={colors.button} style={{ marginRight: 4 }} />
+            <Text style={styles.locationText}>Jakarta, Indonesia</Text>
+            <MaterialCommunityIcons name="chevron-down" size={20} color={colors.text} style={{ marginLeft: 4 }} />
+          </TouchableOpacity>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity style={styles.notificationButton}>
-              <MaterialCommunityIcons name="bell" size={24} color={colors.button} />
+            <TouchableOpacity style={[styles.notificationButton, hasNotification && styles.notificationButtonActiveBorder]}>
+              <MaterialCommunityIcons name="bell-outline" size={24} color={colors.title} />
+              {hasNotification && <View style={styles.notificationDot} />}
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Image source={require('../../assets/perfil.jpeg')} style={styles.avatar} />
+              <Image source={require('../../assets/perfil.jpeg')} style={[styles.avatar, hasNotification && styles.avatarActiveBorder]} />
             </TouchableOpacity>
           </View>
         </View>
 
+        <View style={styles.greetingContainer}>
+          <Text style={styles.greetingText}>Hey, <Text style={{ fontWeight: '800', color: colors.button }}>Jonathan!</Text></Text>
+          <Text style={styles.subGreetingText}>Let's start exploring</Text>
+        </View>
+
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
+            <MaterialCommunityIcons name="magnify" size={20} color={colors.description} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search"
+              placeholder="Search House, Apartment, etc"
               placeholderTextColor={colors.description}
             />
-            <MaterialCommunityIcons name="magnify" size={20} color={colors.description} />
+            <View style={styles.separator} />
+            <MaterialCommunityIcons name="microphone" size={20} color={colors.description} />
           </View>
-          <TouchableOpacity style={styles.filterButton}>
-            <MaterialCommunityIcons name="filter-variant" size={24} color={colors.button} />
-          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
@@ -102,7 +114,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Populares</Text>
+            <Text style={styles.sectionTitle}>Featured Estates</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>
@@ -130,7 +142,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Próximos de você</Text>
+            <Text style={styles.sectionTitle}>Nearby Listings</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
               <Text style={styles.seeAllText}>Ver todos</Text>
             </TouchableOpacity>

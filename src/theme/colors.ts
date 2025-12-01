@@ -2,7 +2,7 @@ export const lightColors = {
   background: '#FFFFFF',
   card: '#FFFFFF',
   text: '#0F172A',
-  title: '#0F172A',
+  title: '#224E67',
   description: '#475569',
   button: '#0B948F',
   buttonText: '#FFFFFF',

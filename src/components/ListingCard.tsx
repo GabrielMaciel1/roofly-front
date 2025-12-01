@@ -34,51 +34,35 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, onPress, onLongPress
     >
       <Image source={listing.image} style={styles.listingImage} />
 
-      <View style={styles.listingRatingContainer}>
-        <MaterialCommunityIcons name="star" size={14} color={colors.star} />
-        <Text style={styles.listingRatingText}>{listing.rating}</Text>
+      <View style={styles.overlayContainer}>
+        <View style={styles.listingRatingContainer}>
+          <MaterialCommunityIcons name="star" size={14} color={colors.star} />
+          <Text style={styles.listingRatingText}>{listing.rating}</Text>
+        </View>
+        <TouchableOpacity style={styles.heartIconContainer}>
+          <MaterialCommunityIcons
+            name="heart-outline"
+            size={20}
+            color={colors.card}
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.listingInfo}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 4,
-          }}
-        >
-          <View style={styles.listingTypeLabel}>
-            <Text style={styles.listingTypeLabelText}>{listing.type}</Text>
-          </View>
-
-          <View style={styles.listingPriceContainer}>
-            <Text style={styles.listingPrice}>{listing.price}</Text>
-            <Text style={styles.listingPeriod}>{listing.period}</Text>
-          </View>
+        <View style={styles.listingPriceContainer}>
+          <Text style={styles.listingPrice}>{listing.price}</Text>
+          <Text style={styles.listingPeriod}>{listing.period}</Text>
         </View>
-
         <Text style={styles.listingTitle}>{listing.title}</Text>
-
-        <View style={styles.listingLocationAndHeartContainer}>
-          <View style={styles.listingLocationContainer}>
-            <MaterialCommunityIcons
-              name="map-marker"
-              size={14}
-              color={colors.button}
-            />
-            <Text style={styles.listingLocationText}>
-              {listing.location}
-            </Text>
-          </View>
-
-          <TouchableOpacity style={styles.heartIconContainer}>
-            <MaterialCommunityIcons
-              name="heart-outline"
-              size={20}
-              color={colors.button}
-            />
-          </TouchableOpacity>
+        <View style={styles.listingLocationContainer}>
+          <MaterialCommunityIcons
+            name="map-marker"
+            size={14}
+            color={colors.description}
+          />
+          <Text style={styles.listingLocationText}>
+            {listing.location}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
